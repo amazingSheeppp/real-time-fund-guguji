@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Guguji" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#FF2196F3</item>
+        <item name="colorOnPrimary">#FFFFFFFF</item>
+        <item name="colorPrimaryContainer">#FFBBDEFB</item>
+        <item name="colorSecondary">#FF03A9F4</item>
+        <item name="colorSurface">#FFFFFFFF</item>
+        <item name="colorOnSurface">#FF1C1B1F</item>
+        <item name="android:statusBarColor">#FF1976D2</item>
+    </style>
+
+    <style name="Theme.Guguji" parent="Base.Theme.Guguji" />
+</resources>

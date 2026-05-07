@@ -1,0 +1,47 @@
+# --- Android / Gradle ---
+*.iml
+*.class
+*.jar
+*.aar
+*.apk
+*.aab
+*.dex
+*.ap_
+
+# Build outputs
+/build/
+app/build/
+.gradle/
+local.properties
+
+# Generated source
+gen/
+
+# JNI
+.externalNativeBuild/
+.cxx/
+
+# --- IDE: IntelliJ / Android Studio ---
+.idea/
+*.iws
+*.ipr
+*.ids
+
+# --- IDE: VS Code ---
+.vscode/
+*.swp
+*.swo
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.log
+
+# --- Misc ---
+/captures/
+lint/
+lint-baseline.xml
+*.hprof
+*.prof
+*.png.crush

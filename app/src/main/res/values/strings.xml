@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">估估基</string>
+    <string name="search_hint">输入基金代码、名称或拼音</string>
+    <string name="empty_title">还没有添加基金</string>
+    <string name="empty_hint">点击右上角搜索按钮添加基金</string>
+    <string name="save">保存</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="delete">删除</string>
+    <string name="edit_holding">编辑持仓</string>
+    <string name="refresh">刷新</string>
+    <string name="settings">设置</string>
+    <string name="search">搜索</string>
+    <string name="clear_data">清除所有数据</string>
+    <string name="feedback">意见反馈</string>
+    <string name="about">关于</string>
+    <string name="version">v1.0</string>
+</resources>
