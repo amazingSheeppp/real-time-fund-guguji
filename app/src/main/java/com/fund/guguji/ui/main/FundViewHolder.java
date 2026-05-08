@@ -51,8 +51,8 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
             tvChangePercent.setVisibility(View.VISIBLE);
 
             int color = fund.getGszzl() >= 0
-                    ? itemView.getContext().getColor(R.color.red)
-                    : itemView.getContext().getColor(R.color.green);
+                    ? itemView.getContext().getColor(R.color.price_up)
+                    : itemView.getContext().getColor(R.color.price_down);
             tvChangePercent.setTextColor(color);
         } else {
             tvChangePercent.setVisibility(View.GONE);
@@ -64,8 +64,8 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
             tvProfitToday.setText(profitText);
             tvProfitToday.setVisibility(View.VISIBLE);
             tvProfitToday.setTextColor(fund.getProfitToday() >= 0
-                    ? itemView.getContext().getColor(R.color.red)
-                    : itemView.getContext().getColor(R.color.green));
+                    ? itemView.getContext().getColor(R.color.price_up)
+                    : itemView.getContext().getColor(R.color.price_down));
         } else {
             tvProfitToday.setVisibility(View.GONE);
         }
@@ -76,8 +76,8 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
             tvProfitTotal.setText(totalText);
             tvProfitTotal.setVisibility(View.VISIBLE);
             tvProfitTotal.setTextColor(fund.getProfitTotal() >= 0
-                    ? itemView.getContext().getColor(R.color.red)
-                    : itemView.getContext().getColor(R.color.green));
+                    ? itemView.getContext().getColor(R.color.price_up)
+                    : itemView.getContext().getColor(R.color.price_down));
         } else {
             tvProfitTotal.setVisibility(View.GONE);
         }
