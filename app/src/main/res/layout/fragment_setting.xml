@@ -15,9 +15,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:navigationIconTint="@color/primary"
-            app:title="设置"
+            app:title="@string/app_name"
             app:titleTextColor="@color/primary"
             app:titleCentered="false"
             app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />
@@ -84,8 +82,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_menu_send"
-                            android:rotation="180"
+                            android:src="@drawable/ic_chevron_right"
                             app:tint="@color/outline" />
                     </LinearLayout>
 
@@ -96,39 +93,6 @@
                         android:background="@color/outline_variant"
                         android:alpha="0.3" />
 
-                    <!-- Feedback -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="意见反馈"
-                            android:textColor="@color/on_surface"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/ic_menu_send"
-                            android:rotation="180"
-                            app:tint="@color/outline" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginHorizontal="16dp"
-                        android:background="@color/outline_variant"
-                        android:alpha="0.3" />
 
                     <!-- About -->
                     <LinearLayout
@@ -165,8 +129,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@android:drawable/ic_menu_send"
-                            android:rotation="180"
+                            android:src="@drawable/ic_chevron_right"
                             app:tint="@color/outline" />
                     </LinearLayout>
 

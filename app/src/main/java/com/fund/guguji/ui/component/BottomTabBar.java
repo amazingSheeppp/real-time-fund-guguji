@@ -50,21 +50,18 @@ public class BottomTabBar extends LinearLayout {
         tabs = new View[]{
                 findViewById(R.id.tab_home),
                 findViewById(R.id.tab_analysis),
-                findViewById(R.id.tab_explore),
                 findViewById(R.id.tab_settings)
         };
 
         icons = new ImageView[]{
                 findViewById(R.id.iv_home),
                 findViewById(R.id.iv_analysis),
-                findViewById(R.id.iv_explore),
                 findViewById(R.id.iv_settings)
         };
 
         texts = new TextView[]{
                 findViewById(R.id.tv_home),
                 findViewById(R.id.tv_analysis),
-                findViewById(R.id.tv_explore),
                 findViewById(R.id.tv_settings)
         };
 

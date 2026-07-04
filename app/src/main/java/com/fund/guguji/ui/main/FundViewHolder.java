@@ -19,7 +19,7 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
     private final TextView tvChangePercent;
     private final TextView tvProfitToday;
     private final TextView tvProfitTotal;
-    private final TextView tvNavInfo;
+//    private final TextView tvNavInfo;
 
     public FundViewHolder(View itemView) {
         super(itemView);
@@ -29,7 +29,7 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
         tvChangePercent = itemView.findViewById(R.id.tv_change_percent);
         tvProfitToday = itemView.findViewById(R.id.tv_profit_today);
         tvProfitTotal = itemView.findViewById(R.id.tv_profit_total);
-        tvNavInfo = itemView.findViewById(R.id.tv_nav_info);
+//        tvNavInfo = itemView.findViewById(R.id.tv_nav_info);
     }
 
     public void bind(FundEntity fund) {
@@ -83,13 +83,13 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
         }
 
         // 净值信息
-        String navInfo = "";
-        if (fund.getJzrq() != null && fund.getDwjz() != null) {
-            navInfo = fund.getJzrq() + " 净值 " + fund.getDwjz();
-        }
-        if (fund.getGztime() != null) {
-            navInfo += " 估值 " + fund.getGztime();
-        }
-        tvNavInfo.setText(navInfo.trim());
+//        String navInfo = "";
+//        if (fund.getJzrq() != null && fund.getDwjz() != null) {
+//            navInfo = fund.getJzrq() + " 净值 " + fund.getDwjz();
+//        }
+//        if (fund.getGztime() != null) {
+//            navInfo += " 估值 " + fund.getGztime();
+//        }
+//        tvNavInfo.setText(navInfo.trim());
     }
 }

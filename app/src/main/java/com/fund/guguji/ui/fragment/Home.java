@@ -79,6 +79,9 @@ public class Home extends Fragment {
 
         emptyState = view.findViewById(R.id.empty_state);
 
+        // 设置刷新按钮点击事件，执行估值刷新
+        view.findViewById(R.id.btn_refresh).setOnClickListener(v -> viewModel.refreshValuations());
+
         view.findViewById(R.id.fab_add).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), SearchActivity.class)));
     }

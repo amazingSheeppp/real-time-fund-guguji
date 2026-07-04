@@ -2,9 +2,11 @@ package com.fund.guguji.ui.search;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +33,7 @@ public class SearchActivity extends AppCompatActivity {
     private LocalFundRepository localRepo;
     private SearchResultsAdapter adapter;
     private CompositeDisposable disposables = new CompositeDisposable();
+    private View emptyState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,15 @@ public class SearchActivity extends AppCompatActivity {
         RealTimeFundApp app = (RealTimeFundApp) getApplication();
         searchApi = app.getFundSearchApi();
         localRepo = app.getLocalFundRepository();
+
+        // 设置返回按钮的点击事件，返回上一页
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
+        // 初始化空状态视图并绑定预设的搜索空状态文案
+        emptyState = findViewById(R.id.empty_state);
+        TextView tvEmpty = emptyState.findViewById(R.id.tv_empty);
+        tvEmpty.setText(R.string.search_empty_title);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_search_results);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -88,6 +100,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         Toast.makeText(this, "正在搜索...", Toast.LENGTH_SHORT).show();
+        emptyState.setVisibility(View.GONE); // 新搜索开始前，默认隐藏空状态
 
         disposables.add(
                 searchApi.searchFunds(keyword)
@@ -96,13 +109,19 @@ public class SearchActivity extends AppCompatActivity {
                         .subscribe(
                                 results -> {
                                     if (results == null || results.isEmpty()) {
-                                        Toast.makeText(this, "未找到匹配的基金", Toast.LENGTH_SHORT).show();
+                                        adapter.submitList(null); // 清空历史搜索结果
+                                        emptyState.setVisibility(View.VISIBLE); // 显示无结果空状态
                                     } else {
+                                        emptyState.setVisibility(View.GONE);
                                         adapter.submitList(results);
                                     }
                                 },
-                                throwable -> Toast.makeText(this,
-                                        "搜索失败: " + throwable.getMessage(), Toast.LENGTH_LONG).show()
+                                throwable -> {
+                                    adapter.submitList(null);
+                                    emptyState.setVisibility(View.VISIBLE);
+                                    Toast.makeText(this,
+                                            "搜索失败: " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                }
                         )
         );
     }

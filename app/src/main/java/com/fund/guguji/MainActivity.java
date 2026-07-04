@@ -63,10 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     showFragment(myFragment);
                     break;
                 case 2:
-                    if (circleFragment == null) circleFragment = new Circle();
-                    showFragment(circleFragment);
-                    break;
-                case 3:
                     if (settingsFragment == null) settingsFragment = new Setting();
                     showFragment(settingsFragment);
                     break;
