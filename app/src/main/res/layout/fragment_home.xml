@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/paper">
 
+    <!-- 顶部栏:衬线标题 + 搜索 + 刷新 -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface"
+        android:background="@color/paper"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -17,18 +18,32 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
-            app:titleTextColor="@color/primary"
+            app:titleTextAppearance="@style/TextAppearance.Guguji.SerifTitle"
+            app:titleTextColor="@color/ink"
             app:titleCentered="false">
+
+            <ImageView
+                android:id="@+id/btn_search"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_search"
+                android:contentDescription="@string/search"
+                app:tint="@color/ink_mid"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/btn_refresh"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="56dp"
                 android:src="@drawable/ic_refresh"
-                android:contentDescription="刷新"
-                app:tint="@color/primary"
+                android:contentDescription="@string/refresh"
+                app:tint="@color/ink_mid"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true" />
@@ -53,114 +68,85 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Summary Card (Bento Style) -->
-                <com.google.android.material.card.MaterialCardView
+                <!-- 市场状态条(纯估值展示) -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    app:cardBackgroundColor="@color/primary_container"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:strokeWidth="0dp">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:background="@drawable/dot_market" />
+
+                    <TextView
+                        android:id="@+id/tv_market_status"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="20dp">
+                        android:layout_marginStart="8dp"
+                        android:text="盘中 · 实时估值"
+                        android:textColor="@color/ink_mid"
+                        android:textSize="12sp" />
 
-                        <TextView
-                            android:id="@+id/tv_pl_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="今日收益"
-                            android:textColor="@color/on_primary_container"
-                            android:alpha="0.9"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/tv_today_pl"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="+245.60"
-                            android:textColor="@color/price_up"
-                            android:textSize="32sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_pl_label" />
+                    <TextView
+                        android:id="@+id/tv_update_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/ink_faint"
+                        android:textSize="12sp"
+                        tools:text="更新于 14:32" />
+                </LinearLayout>
 
-                        <View
-                            android:id="@+id/divider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="16dp"
-                            android:background="@color/on_primary_container"
-                            android:alpha="0.1"
-                            app:layout_constraintTop_toBottomOf="@id/tv_today_pl" />
+                <!-- 墨水笔触分隔线 -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/divider_ink" />
 
-                        <TextView
-                            android:id="@+id/tv_holdings_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="持仓总额"
-                            android:textColor="@color/on_primary_container"
-                            android:alpha="0.8"
-                            android:textSize="12sp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/divider" />
-
-                        <TextView
-                            android:id="@+id/tv_total_holdings"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="2,345.00"
-                            android:textColor="@color/on_primary_container"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_holdings_label" />
-
-                        <TextView
-                            android:id="@+id/tv_yield_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="今日收益率"
-                            android:textColor="@color/on_primary_container"
-                            android:alpha="0.8"
-                            android:textSize="12sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@id/tv_holdings_label" />
-
-                        <TextView
-                            android:id="@+id/tv_today_yield"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="+1.17%"
-                            android:textColor="@color/price_up"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_yield_label" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Fund List Header -->
-                <TextView
+                <!-- 排序 -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="我的持仓"
-                    android:textColor="@color/on_surface"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/tv_sort_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_chip_selected"
+                        android:paddingStart="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="6dp"
+                        android:text="按涨跌幅"
+                        android:textColor="@color/card"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_sort_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_chip_unselected"
+                        android:paddingStart="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="6dp"
+                        android:text="按添加时间"
+                        android:textColor="@color/ink_faint"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <!-- 基金列表 -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_funds"
                     android:layout_width="match_parent"
@@ -172,11 +158,22 @@
                     layout="@layout/empty_state"
                     android:visibility="gone" />
 
+                <!-- 脚注 -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:text="估值数据来自公开接口 · 仅供个人参考，不构成投资建议"
+                    android:textColor="@color/ink_faint"
+                    android:textSize="11sp" />
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <!-- 添加按钮:焦墨方块 FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
@@ -184,8 +181,9 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/primary"
-        app:tint="@color/white"
-        app:elevation="4dp" />
+        app:backgroundTint="@color/ink"
+        app:tint="@color/card"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Guguji.Square"
+        app:elevation="0dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -98,6 +98,7 @@ public class BottomTabBar extends LinearLayout {
         for (int i = 0; i < tabs.length; i++) {
             boolean isActive = (i == currentTab);
             // System will automatically apply the color from selector based on 'selected' state
+            tabs[i].setSelected(isActive);
             icons[i].setSelected(isActive);
             texts[i].setSelected(isActive);
         }

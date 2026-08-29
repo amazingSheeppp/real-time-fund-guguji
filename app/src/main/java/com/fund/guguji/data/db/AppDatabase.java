@@ -8,18 +8,15 @@ import androidx.room.RoomDatabase;
 
 import com.fund.guguji.data.db.dao.FundDao;
 import com.fund.guguji.data.db.dao.GroupDao;
-import com.fund.guguji.data.db.dao.HoldingDao;
 import com.fund.guguji.data.db.dao.ValuationSeriesDao;
 import com.fund.guguji.data.db.entity.FundEntity;
 import com.fund.guguji.data.db.entity.GroupEntity;
 import com.fund.guguji.data.db.entity.GroupFundCrossRef;
-import com.fund.guguji.data.db.entity.HoldingEntity;
 import com.fund.guguji.data.db.entity.ValuationPointEntity;
 
 @Database(
     entities = {
         FundEntity.class,
-        HoldingEntity.class,
         GroupEntity.class,
         GroupFundCrossRef.class,
         ValuationPointEntity.class
@@ -30,7 +27,6 @@ import com.fund.guguji.data.db.entity.ValuationPointEntity;
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract FundDao fundDao();
-    public abstract HoldingDao holdingDao();
     public abstract GroupDao groupDao();
     public abstract ValuationSeriesDao seriesDao();
 

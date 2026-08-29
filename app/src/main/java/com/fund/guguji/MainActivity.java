@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.fund.guguji.ui.component.BottomTabBar;
 import com.fund.guguji.ui.fragment.Circle;
 import com.fund.guguji.ui.fragment.Home;
-import com.fund.guguji.ui.fragment.My;
 import com.fund.guguji.ui.fragment.Setting;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     
     // 缓存 Fragment 实例
     private Fragment homeFragment;
-    private Fragment myFragment;
     private Fragment circleFragment;
 
     private Fragment settingsFragment;
@@ -55,14 +53,17 @@ public class MainActivity extends AppCompatActivity {
         bottomTabBar.setOnTabSelectedListener(index -> {
             switch (index) {
                 case 0:
+                    // 自选
                     if (homeFragment == null) homeFragment = new Home();
                     showFragment(homeFragment);
                     break;
                 case 1:
-                    if (myFragment == null) myFragment = new My();
-                    showFragment(myFragment);
+                    // 圈子
+                    if (circleFragment == null) circleFragment = new Circle();
+                    showFragment(circleFragment);
                     break;
                 case 2:
+                    // 我的(设置)
                     if (settingsFragment == null) settingsFragment = new Setting();
                     showFragment(settingsFragment);
                     break;

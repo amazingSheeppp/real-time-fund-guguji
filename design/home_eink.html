@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>咕咕鸡 · 自选 - 墨水屏效果图</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700;900&family=Noto+Sans+SC:wght@400;500;700&family=Roboto+Flex:opsz,wght@8..144,400..700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        /* 墨分五色:焦、重、淡、清、纸(中性灰,对齐 Kindle 屏) */
+                        paper: '#E4E4E4',       /* 纸底:Kindle 灰白(全屏最亮处) */
+                        card: '#EBEBEB',        /* 卡片:仅亮一档,e-ink 无纯白 */
+                        ink: '#171717',         /* 焦墨(最强对比) */
+                        'ink-heavy': '#2E2E2E', /* 重墨(标题/数字) */
+                        'ink-mid': '#696969',   /* 淡墨(正文) */
+                        'ink-faint': '#9A9A9A', /* 清墨(辅助) */
+                        'line-strong': '#2A2A2A',/* 主边框(像素硬朗) */
+                        'line-soft': '#C8C8C8'  /* 浅分隔 */
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif SC"', '"Songti SC"', 'SimSun', 'serif'],
+                        sans: ['"Noto Sans SC"', '"Roboto Flex"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            min-height: max(884px, 100dvh);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .num {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* 墨水颗粒:中性灰 dithering,无色偏 */
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: multiply;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0 0.2 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23d)'/%3E%3C/svg%3E");
+        }
+
+        /* Kindle 前光:四角微暗,中心透亮(导光不均的物理特征) */
+        .frontlight {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            background:
+                radial-gradient(ellipse 130% 110% at 50% 45%, transparent 58%, rgba(38, 38, 38, 0.10) 100%);
+        }
+
+        /* 白文印:黑底白字(阴刻),墨水屏版印章 */
+        .seal-eink {
+            width: 42px;
+            height: 42px;
+            background: #171717;
+            color: #EBEBEB;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            place-items: center;
+            font-family: 'Noto Serif SC', serif;
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1;
+            border-radius: 6px 4px 5px 4px;
+            box-shadow: inset 0 0 0 2px #E4E4E4, inset 0 0 0 4px #171717;
+            user-select: none;
+        }
+
+        /* e-ink 刷新闪烁:steps 跳变,致敬全刷 */
+        @keyframes einkFlash {
+            0%   { filter: none; }
+            20%  { filter: invert(1) contrast(3); }
+            40%  { filter: brightness(0); }
+            60%  { filter: invert(1); }
+            80%  { filter: brightness(2.2); }
+            100% { filter: none; }
+        }
+
+        .eink-flash main,
+        .eink-flash header,
+        .eink-flash nav {
+            animation: einkFlash .7s steps(1, end);
+        }
+    </style>
+</head>
+
+<body class="bg-paper text-ink-heavy font-sans">
+<div class="grain"></div>
+<div class="frontlight"></div>
+
+<!-- 顶部栏:白文印 + 衬线标题 -->
+<header class="sticky top-0 z-40 bg-paper/90 backdrop-blur-sm border-b-[1.5px] border-line-strong">
+    <div class="max-w-lg mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="seal-eink" aria-label="咕咕鸡印">
+                <span>咕</span><span>咕</span><span>鸡</span><span>印</span>
+            </div>
+            <div>
+                <h1 class="font-serif font-bold text-[20px] leading-6 text-ink">咕咕鸡</h1>
+                <p class="text-[11px] text-ink-faint tracking-[0.3em] mt-0.5">实时估值 · 自选</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-1">
+            <button class="p-2 rounded-md text-ink-mid hover:bg-card active:scale-95 transition-all">
+                <span class="material-symbols-outlined w-6 h-6">search</span>
+            </button>
+            <!-- 点击触发 e-ink 全刷闪烁 -->
+            <button id="btn-refresh" class="p-2 rounded-md text-ink-mid hover:bg-card active:scale-95 transition-all">
+                <span class="material-symbols-outlined w-6 h-6">refresh</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="relative z-10 max-w-lg mx-auto px-4 pt-3 pb-28">
+    <!-- 市场状态条 -->
+    <div class="flex items-center justify-between py-2.5">
+        <div class="flex items-center gap-2 text-[12px] text-ink-mid">
+            <span class="w-1.5 h-1.5 bg-ink inline-block"></span>
+            <span>A 股 · 盘中实时估值</span>
+        </div>
+        <span class="text-[12px] text-ink-faint num">更新于 14:32</span>
+    </div>
+    <div class="border-t-[1.5px] border-line-strong mb-4"></div>
+
+    <!-- 排序 -->
+    <div class="flex gap-2 mb-4">
+        <button class="px-4 py-1.5 rounded-md text-[12px] font-medium bg-ink text-card border-[1.5px] border-ink active:scale-95 transition-transform">按涨跌幅</button>
+        <button class="px-4 py-1.5 rounded-md text-[12px] font-medium border-[1.5px] border-line-soft text-ink-faint hover:border-ink-mid active:scale-95 transition-all">按添加时间</button>
+    </div>
+
+    <!-- 基金列表 -->
+    <div class="space-y-3">
+        <!-- 涨:浓墨实心徽标 -->
+        <div class="bg-card border-[1.5px] border-line-strong rounded-md px-4 py-3.5">
+            <div class="flex justify-between items-start gap-3">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-serif font-semibold text-[16px] text-ink truncate">易方达蓝筹精选混合</h3>
+                        <span class="shrink-0 text-[10px] px-1.5 py-px rounded border border-line-soft text-ink-faint">混合</span>
+                    </div>
+                    <p class="text-[12px] text-ink-faint num mt-0.5">005827 · 估值 14:31</p>
+                </div>
+                <div class="text-right shrink-0">
+                    <p class="num text-[20px] font-semibold leading-6 text-ink">2.3456</p>
+                    <span class="inline-block mt-1 px-2 py-0.5 rounded text-[12px] font-semibold num bg-ink text-card">↑ +1.23%</span>
+                </div>
+            </div>
+            <div class="mt-2.5 pt-2 border-t border-line-soft flex justify-between text-[11px] text-ink-faint">
+                <span>昨日净值 <span class="num text-ink-mid">2.3171</span></span>
+                <span>净值日期 <span class="num text-ink-mid">08-27</span></span>
+            </div>
+        </div>
+
+        <!-- 跌:淡墨空心徽标 -->
+        <div class="bg-card border-[1.5px] border-line-strong rounded-md px-4 py-3.5">
+            <div class="flex justify-between items-start gap-3">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-serif font-semibold text-[16px] text-ink truncate">天弘中证白酒指数A</h3>
+                        <span class="shrink-0 text-[10px] px-1.5 py-px rounded border border-line-soft text-ink-faint">指数</span>
+                    </div>
+                    <p class="text-[12px] text-ink-faint num mt-0.5">001631 · 估值 14:31</p>
+                </div>
+                <div class="text-right shrink-0">
+                    <p class="num text-[20px] font-semibold leading-6 text-ink">1.2843</p>
+                    <span class="inline-block mt-1 px-2 py-0.5 rounded text-[12px] font-semibold num bg-card text-ink border-[1.5px] border-ink">↓ -0.86%</span>
+                </div>
+            </div>
+            <div class="mt-2.5 pt-2 border-t border-line-soft flex justify-between text-[11px] text-ink-faint">
+                <span>昨日净值 <span class="num text-ink-mid">1.2954</span></span>
+                <span>净值日期 <span class="num text-ink-mid">08-27</span></span>
+            </div>
+        </div>
+
+        <!-- 涨 -->
+        <div class="bg-card border-[1.5px] border-line-strong rounded-md px-4 py-3.5">
+            <div class="flex justify-between items-start gap-3">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-serif font-semibold text-[16px] text-ink truncate">华夏沪深300ETF联接A</h3>
+                        <span class="shrink-0 text-[10px] px-1.5 py-px rounded border border-line-soft text-ink-faint">指数</span>
+                    </div>
+                    <p class="text-[12px] text-ink-faint num mt-0.5">000051 · 估值 14:30</p>
+                </div>
+                <div class="text-right shrink-0">
+                    <p class="num text-[20px] font-semibold leading-6 text-ink">1.5210</p>
+                    <span class="inline-block mt-1 px-2 py-0.5 rounded text-[12px] font-semibold num bg-ink text-card">↑ +0.42%</span>
+                </div>
+            </div>
+            <div class="mt-2.5 pt-2 border-t border-line-soft flex justify-between text-[11px] text-ink-faint">
+                <span>昨日净值 <span class="num text-ink-mid">1.5146</span></span>
+                <span>净值日期 <span class="num text-ink-mid">08-27</span></span>
+            </div>
+        </div>
+
+        <!-- 停牌:虚线灰徽标 -->
+        <div class="bg-paper border-[1.5px] border-dashed border-line-soft rounded-md px-4 py-3.5">
+            <div class="flex justify-between items-start gap-3">
+                <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-serif font-semibold text-[16px] text-ink-mid truncate">中欧医疗健康混合A</h3>
+                        <span class="shrink-0 text-[10px] px-1.5 py-px rounded border border-dashed border-line-soft text-ink-faint">停牌</span>
+                    </div>
+                    <p class="text-[12px] text-ink-faint num mt-0.5">003095 · 暂无实时估值</p>
+                </div>
+                <div class="text-right shrink-0">
+                    <p class="num text-[20px] font-semibold leading-6 text-ink-faint">--</p>
+                    <span class="inline-block mt-1 px-2 py-0.5 rounded text-[12px] font-semibold num bg-paper text-ink-faint border border-dashed border-line-soft">0.00%</span>
+                </div>
+            </div>
+            <div class="mt-2.5 pt-2 border-t border-dashed border-line-soft flex justify-between text-[11px] text-ink-faint">
+                <span>昨日净值 <span class="num text-ink-mid">1.8942</span></span>
+                <span>净值日期 <span class="num text-ink-mid">08-26</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 脚注 -->
+    <p class="text-center text-[11px] text-ink-faint mt-8 tracking-[0.2em]">估值数据来自公开接口 · 仅供个人参考,不构成投资建议</p>
+</main>
+
+<!-- 添加按钮:墨黑方块 -->
+<button aria-label="添加基金"
+        class="fixed right-4 bottom-24 z-40 w-12 h-12 rounded-lg bg-ink text-card border-[1.5px] border-ink shadow-none flex items-center justify-center active:scale-95 transition-transform">
+    <span class="material-symbols-outlined w-6 h-6">add</span>
+</button>
+
+<!-- 底部导航:自选 / 圈子 / 我的 -->
+<nav class="fixed bottom-0 left-0 w-full z-40 bg-card/90 backdrop-blur-sm border-t-[1.5px] border-line-strong">
+    <div class="max-w-lg mx-auto flex justify-around items-center px-2 py-2.5">
+        <div class="flex flex-col items-center gap-0.5 px-6 py-1 bg-ink text-card rounded-md">
+            <span class="material-symbols-outlined w-6 h-6" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="text-[11px] font-medium">自选</span>
+        </div>
+        <div class="flex flex-col items-center gap-0.5 px-6 py-1 text-ink-faint hover:text-ink-mid transition-colors">
+            <span class="material-symbols-outlined w-6 h-6">group</span>
+            <span class="text-[11px]">圈子</span>
+        </div>
+        <div class="flex flex-col items-center gap-0.5 px-6 py-1 text-ink-faint hover:text-ink-mid transition-colors">
+            <span class="material-symbols-outlined w-6 h-6">person</span>
+            <span class="text-[11px]">我的</span>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // 点击刷新:模拟 e-ink 全刷闪烁
+    document.getElementById('btn-refresh').addEventListener('click', () => {
+        document.documentElement.classList.remove('eink-flash');
+        void document.documentElement.offsetWidth; // 重启动画
+        document.documentElement.classList.add('eink-flash');
+        setTimeout(() => document.documentElement.classList.remove('eink-flash'), 800);
+    });
+</script>
+
+</body>
+
+</html>

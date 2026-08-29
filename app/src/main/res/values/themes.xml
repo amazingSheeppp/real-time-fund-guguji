@@ -1,15 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- 墨水屏主题:中性灰,与 DESIGN_SPEC.md 一致 -->
     <style name="Base.Theme.Guguji" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#FF2196F3</item>
-        <item name="colorOnPrimary">#FFFFFFFF</item>
-        <item name="colorPrimaryContainer">#FFBBDEFB</item>
-        <item name="colorSecondary">#FF03A9F4</item>
-        <item name="colorSurface">#FFFFFFFF</item>
-        <item name="colorOnSurface">#FF1C1B1F</item>
-        <item name="android:statusBarColor">#FF1976D2</item>
+        <item name="colorPrimary">@color/ink</item>
+        <item name="colorOnPrimary">@color/card</item>
+        <item name="colorPrimaryContainer">@color/ink_heavy</item>
+        <item name="colorSecondary">@color/ink_mid</item>
+        <item name="colorSurface">@color/card</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="android:statusBarColor">@color/paper</item>
+        <item name="android:windowBackground">@color/paper</item>
     </style>
 
     <style name="Theme.Guguji" parent="Base.Theme.Guguji" />
+
+    <!-- 衬线标题(墨水屏纸书气质) -->
+    <style name="TextAppearance.Guguji.SerifTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 方形 FAB(不用圆形) -->
+    <style name="ShapeAppearance.Guguji.Square" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>

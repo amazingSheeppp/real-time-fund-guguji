@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+<!-- 墨水屏卡片:焦墨 1.5dp 描边 + 小圆角,无阴影 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/card" />
     <stroke android:width="1.5dp" android:color="@color/line_strong" />
     <corners android:radius="6dp" />

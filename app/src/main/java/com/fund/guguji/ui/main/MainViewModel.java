@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.fund.guguji.RealTimeFundApp;
 import com.fund.guguji.data.db.entity.FundEntity;
 import com.fund.guguji.data.db.entity.GroupEntity;
-import com.fund.guguji.data.db.entity.HoldingEntity;
 import com.fund.guguji.data.repository.FundRepository;
 import com.fund.guguji.data.repository.LocalFundRepository;
 import com.fund.guguji.util.Event;
@@ -19,7 +18,6 @@ import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -44,10 +42,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public LiveData<List<FundEntity>> getAllFunds() {
         return localFundRepository.getAllFunds();
-    }
-
-    public LiveData<List<HoldingEntity>> getAllHoldings() {
-        return localFundRepository.getAllHoldings();
     }
 
     public LiveData<List<GroupEntity>> getAllGroups() {
@@ -82,28 +76,6 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     /**
-     * 异步加载持仓信息
-     */
-    public void loadHoldingByCode(String fundCode, OnHoldingLoaded listener) {
-        disposables.add(
-                Single.fromCallable(() -> localFundRepository.getHoldingByCode(fundCode))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                holding -> {
-                                    if (listener != null) listener.onHoldingLoaded(holding);
-                                },
-                                throwable -> errorMessage.setValue(new Event<>(
-                                        "加载持仓失败: " + throwable.getMessage()))
-                        )
-        );
-    }
-
-    public interface OnHoldingLoaded {
-        void onHoldingLoaded(HoldingEntity holding);
-    }
-
-    /**
      * 异步删除基金
      */
     public void deleteFund(FundEntity fund) {
@@ -119,30 +91,6 @@ public class MainViewModel extends AndroidViewModel {
                         throwable -> errorMessage.setValue(new Event<>(
                                 "删除失败: " + throwable.getMessage()))
                 )
-        );
-    }
-
-    /**
-     * 异步保存持仓信息
-     */
-    public void saveHolding(HoldingEntity holding) {
-        disposables.add(
-                Completable.fromAction(() -> localFundRepository.saveHolding(holding))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                () -> errorMessage.setValue(new Event<>("持仓已保存")),
-                                throwable -> errorMessage.setValue(new Event<>(
-                                        "保存持仓失败: " + throwable.getMessage()))
-                        )
-        );
-    }
-
-    public void deleteHolding(String fundCode) {
-        disposables.add(
-                Completable.fromAction(() -> localFundRepository.deleteHolding(fundCode))
-                        .subscribeOn(Schedulers.io())
-                        .subscribe()
         );
     }
 

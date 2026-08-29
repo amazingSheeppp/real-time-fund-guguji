@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 底部 Tab 选中:焦墨实心块 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid android:color="@color/ink" />
-    <corners android:radius="999dp" />
+    <corners android:radius="8dp" />
 </shape>

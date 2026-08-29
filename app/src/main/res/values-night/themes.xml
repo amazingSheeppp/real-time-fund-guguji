@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 墨水屏风格无传统深色模式:开背光时颜色不变,保持同套中性灰 -->
     <style name="Base.Theme.Guguji" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#FF90CAF9</item>
-        <item name="colorOnPrimary">#FF1C1B1F</item>
-        <item name="colorPrimaryContainer">#FF1A237E</item>
-        <item name="colorSecondary">#FF03A9F4</item>
-        <item name="colorSurface">#FF1C1B1F</item>
-        <item name="colorOnSurface">#FFE6E1E5</item>
-        <item name="android:statusBarColor">#FF121212</item>
+        <item name="colorPrimary">@color/ink</item>
+        <item name="colorOnPrimary">@color/card</item>
+        <item name="colorPrimaryContainer">@color/ink_heavy</item>
+        <item name="colorSecondary">@color/ink_mid</item>
+        <item name="colorSurface">@color/card</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="android:statusBarColor">@color/paper</item>
+        <item name="android:windowBackground">@color/paper</item>
     </style>
+
+    <style name="Theme.Guguji" parent="Base.Theme.Guguji" />
 </resources>

@@ -3,25 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/surface_container"
-    android:elevation="8dp"
+    android:background="@drawable/bg_bottom_bar"
     android:orientation="horizontal"
     android:paddingStart="8dp"
     android:paddingTop="12dp"
     android:paddingEnd="8dp"
     android:paddingBottom="12dp">
 
-    <!-- Home Tab -->
+    <!-- 自选 Tab -->
     <LinearLayout
         android:id="@+id/tab_home"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selector_tab_bg"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
         
         <ImageView
             android:id="@+id/iv_home"
@@ -40,23 +41,25 @@
             android:textSize="12sp" />
     </LinearLayout>
 
-    <!-- Analysis Tab -->
+    <!-- 圈子 Tab -->
     <LinearLayout
         android:id="@+id/tab_analysis"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selector_tab_bg"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
 
         <ImageView
             android:id="@+id/iv_analysis"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/tab_my"
+            android:src="@drawable/tab_chicken"
             app:tint="@color/selector_tab_item" />
 
         <TextView
@@ -98,17 +101,19 @@
 <!--            android:textSize="12sp" />-->
 <!--    </LinearLayout>-->
 
-    <!-- Settings Tab -->
+    <!-- 我的 Tab -->
     <LinearLayout
         android:id="@+id/tab_settings"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:background="@drawable/selector_tab_bg"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
 
         <ImageView
             android:id="@+id/iv_settings"

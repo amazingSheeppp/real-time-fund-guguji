@@ -25,16 +25,6 @@ public class FundEntity {
     private String holdingsReportDate;  // 持仓报告日期
     private boolean holdingsIsLastQuarter; // 是否为最近一个季度末
     private int orderIndex;             // 排序序号
-    private double profitAmount;        // 持仓金额
-    private double profitToday;         // 今日收益
-    private double profitTotal;         // 总收益
-    private double profitTodayPercent;  // 今日收益率
-    private double profitTotalPercent;  // 总收益率
-
-    // 持仓加权估算（仅运行时使用，不持久化）
-    private transient Double estGsz;
-    private transient Double estGszzl;
-    private transient Double estPricedCoverage;
 
     public FundEntity(@NonNull String code, String name) {
         this.code = code;
@@ -82,28 +72,4 @@ public class FundEntity {
 
     public int getOrderIndex() { return orderIndex; }
     public void setOrderIndex(int orderIndex) { this.orderIndex = orderIndex; }
-
-    public double getProfitAmount() { return profitAmount; }
-    public void setProfitAmount(double profitAmount) { this.profitAmount = profitAmount; }
-
-    public double getProfitToday() { return profitToday; }
-    public void setProfitToday(double profitToday) { this.profitToday = profitToday; }
-
-    public double getProfitTotal() { return profitTotal; }
-    public void setProfitTotal(double profitTotal) { this.profitTotal = profitTotal; }
-
-    public double getProfitTodayPercent() { return profitTodayPercent; }
-    public void setProfitTodayPercent(double profitTodayPercent) { this.profitTodayPercent = profitTodayPercent; }
-
-    public double getProfitTotalPercent() { return profitTotalPercent; }
-    public void setProfitTotalPercent(double profitTotalPercent) { this.profitTotalPercent = profitTotalPercent; }
-
-    public Double getEstGsz() { return estGsz; }
-    public void setEstGsz(Double estGsz) { this.estGsz = estGsz; }
-
-    public Double getEstGszzl() { return estGszzl; }
-    public void setEstGszzl(Double estGszzl) { this.estGszzl = estGszzl; }
-
-    public Double getEstPricedCoverage() { return estPricedCoverage; }
-    public void setEstPricedCoverage(Double estPricedCoverage) { this.estPricedCoverage = estPricedCoverage; }
 }

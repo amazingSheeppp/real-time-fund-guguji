@@ -3,37 +3,55 @@
     <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    
-    <!-- M3 Theme Colors (Derived from home.html) -->
-    <color name="primary">#004d99</color>
-    <color name="on_primary">#ffffff</color>
-    <color name="primary_container">#1565c0</color>
-    <color name="on_primary_container">#dae5ff</color>
-    
-    <color name="secondary">#00629d</color>
-    <color name="on_secondary">#ffffff</color>
-    <color name="secondary_container">#4fafff</color>
-    <color name="on_secondary_container">#004069</color>
-    
-    <color name="background">#f9f9ff</color>
-    <color name="on_background">#191c21</color>
-    <color name="surface">#f9f9ff</color>
-    <color name="on_surface">#191c21</color>
-    <color name="on_surface_variant">#424752</color>
-    <color name="outline">#727783</color>
-    <color name="outline_variant">#c2c6d4</color>
-    
-    <color name="surface_container">#ecedf6</color>
-    <color name="surface_container_low">#f2f3fb</color>
-    <color name="surface_container_high">#e7e8f0</color>
-    <color name="surface_container_highest">#e1e2ea</color>
-    <color name="surface_container_lowest">#ffffff</color>
 
-    <!-- Semantic Colors -->
-    <color name="price_up">#E53935</color>
-    <color name="price_down">#43A047</color>
-    <color name="market_closed">#757575</color>
-    <color name="text_secondary">#9E9E9E</color>
+    <!-- 墨水屏 · 墨分五色(中性灰,对齐 DESIGN_SPEC.md) -->
+    <!-- 纸底:全屏最亮处 -->
+    <color name="paper">#E4E4E4</color>
+    <!-- 卡片:仅比纸底亮一档 -->
+    <color name="card">#EBEBEB</color>
+    <!-- 焦墨:最强对比 -->
+    <color name="ink">#171717</color>
+    <!-- 重墨:标题/数字 -->
+    <color name="ink_heavy">#2E2E2E</color>
+    <!-- 淡墨:正文 -->
+    <color name="ink_mid">#696969</color>
+    <!-- 清墨:辅助 -->
+    <color name="ink_faint">#9A9A9A</color>
+    <!-- 主边框(1.5px 硬朗) -->
+    <color name="line_strong">#2A2A2A</color>
+    <!-- 浅分隔(1px) -->
+    <color name="line_soft">#C8C8C8</color>
 
-    <color name="error">#BA1A1A</color>
+    <!-- 涨跌语义(墨的浓淡替代红涨绿跌) -->
+    <color name="price_up">#171717</color>    <!-- 涨=焦墨 -->
+    <color name="price_down">#2E2E2E</color>  <!-- 跌=重墨 -->
+    <color name="market_closed">#9A9A9A</color> <!-- 停牌=清墨 -->
+    <color name="text_secondary">#9A9A9A</color>
+
+    <!-- M3 主题色(与墨水屏色板统一,保持 themes.xml 引用兼容) -->
+    <color name="primary">#171717</color>
+    <color name="on_primary">#EBEBEB</color>
+    <color name="primary_container">#2E2E2E</color>
+    <color name="on_primary_container">#EBEBEB</color>
+
+    <color name="secondary">#696969</color>
+    <color name="on_secondary">#EBEBEB</color>
+    <color name="secondary_container">#C8C8C8</color>
+    <color name="on_secondary_container">#2E2E2E</color>
+
+    <color name="background">#E4E4E4</color>
+    <color name="on_background">#171717</color>
+    <color name="surface">#EBEBEB</color>
+    <color name="on_surface">#171717</color>
+    <color name="on_surface_variant">#696969</color>
+    <color name="outline">#696969</color>
+    <color name="outline_variant">#C8C8C8</color>
+
+    <color name="surface_container">#EBEBEB</color>
+    <color name="surface_container_low">#E4E4E4</color>
+    <color name="surface_container_high">#DDDDDD</color>
+    <color name="surface_container_highest">#D6D6D6</color>
+    <color name="surface_container_lowest">#F0F0F0</color>
+
+    <color name="error">#2A2A2A</color>
 </resources>

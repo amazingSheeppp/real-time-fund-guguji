@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData;
 
 import com.fund.guguji.data.db.dao.FundDao;
 import com.fund.guguji.data.db.dao.GroupDao;
-import com.fund.guguji.data.db.dao.HoldingDao;
 import com.fund.guguji.data.db.entity.FundEntity;
 import com.fund.guguji.data.db.entity.GroupEntity;
 import com.fund.guguji.data.db.entity.GroupFundCrossRef;
-import com.fund.guguji.data.db.entity.HoldingEntity;
 
 import java.util.List;
 
@@ -19,12 +17,10 @@ import java.util.List;
 public class LocalFundRepository {
 
     private final FundDao fundDao;
-    private final HoldingDao holdingDao;
     private final GroupDao groupDao;
 
-    public LocalFundRepository(FundDao fundDao, HoldingDao holdingDao, GroupDao groupDao) {
+    public LocalFundRepository(FundDao fundDao, GroupDao groupDao) {
         this.fundDao = fundDao;
-        this.holdingDao = holdingDao;
         this.groupDao = groupDao;
     }
 
@@ -56,28 +52,6 @@ public class LocalFundRepository {
 
     public LiveData<Integer> getFundCount() {
         return fundDao.getFundCount();
-    }
-
-    // ── 持仓 ──
-
-    public LiveData<List<HoldingEntity>> getAllHoldings() {
-        return holdingDao.getAllHoldings();
-    }
-
-    public LiveData<HoldingEntity> getHoldingByCodeLive(String fundCode) {
-        return holdingDao.getHoldingByCodeLive(fundCode);
-    }
-
-    public HoldingEntity getHoldingByCode(String fundCode) {
-        return holdingDao.getHoldingByCode(fundCode);
-    }
-
-    public void saveHolding(HoldingEntity holding) {
-        holdingDao.insertOrUpdate(holding);
-    }
-
-    public void deleteHolding(String fundCode) {
-        holdingDao.deleteByCode(fundCode);
     }
 
     // ── 分组 ──

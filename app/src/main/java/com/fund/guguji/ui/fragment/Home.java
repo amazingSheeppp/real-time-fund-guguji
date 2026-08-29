@@ -2,6 +2,8 @@ package com.fund.guguji.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fund.guguji.R;
+import com.fund.guguji.data.db.entity.FundEntity;
 import com.fund.guguji.ui.dialog.ConfirmDialog;
-import com.fund.guguji.ui.dialog.HoldingEditDialog;
 import com.fund.guguji.ui.main.FundListAdapter;
 import com.fund.guguji.ui.main.MainViewModel;
 import com.fund.guguji.ui.search.SearchActivity;
+import com.fund.guguji.util.Constants;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class Home extends Fragment {
 
@@ -31,10 +36,15 @@ public class Home extends Fragment {
     private FundListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
     private View emptyState;
-    
-    private TextView tvTodayPL;
-    private TextView tvTotalHoldings;
-    private TextView tvTodayYield;
+
+    private TextView tvMarketStatus;
+    private TextView tvUpdateTime;
+
+    private final Handler autoRefreshHandler = new Handler(Looper.getMainLooper());
+    private final Runnable autoRefreshRunnable = this::refreshData;
+
+    // 排序模式:true = 按涨跌幅,false = 按添加时间
+    private boolean sortByChange = true;
 
     @Nullable
     @Override
@@ -45,26 +55,24 @@ public class Home extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        
+
         initViews(view);
         observeData();
+        startAutoRefresh();
     }
 
     private void initViews(View view) {
-        tvTodayPL = view.findViewById(R.id.tv_today_pl);
-        tvTotalHoldings = view.findViewById(R.id.tv_total_holdings);
-        tvTodayYield = view.findViewById(R.id.tv_today_yield);
+        tvMarketStatus = view.findViewById(R.id.tv_market_status);
+        tvUpdateTime = view.findViewById(R.id.tv_update_time);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_funds);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new FundListAdapter(
                 fund -> {
-                    viewModel.loadHoldingByCode(fund.getCode(), existing ->
-                            HoldingEditDialog.show(requireActivity(), fund.getCode(), fund.getName(), existing,
-                                    holding -> viewModel.saveHolding(holding)));
+                    // 一期无详情页,点击暂无操作
                 },
                 fund -> {
                     ConfirmDialog.show(requireActivity(), "删除基金",
@@ -79,11 +87,55 @@ public class Home extends Fragment {
 
         emptyState = view.findViewById(R.id.empty_state);
 
-        // 设置刷新按钮点击事件，执行估值刷新
-        view.findViewById(R.id.btn_refresh).setOnClickListener(v -> viewModel.refreshValuations());
+        // 刷新按钮
+        view.findViewById(R.id.btn_refresh).setOnClickListener(v -> refreshData());
 
+        // 添加基金:顶部搜索按钮 与 右下角 FAB
+        view.findViewById(R.id.btn_search).setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), SearchActivity.class)));
         view.findViewById(R.id.fab_add).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), SearchActivity.class)));
+
+        // 排序切换
+        TextView tvSortChange = view.findViewById(R.id.tv_sort_change);
+        TextView tvSortTime = view.findViewById(R.id.tv_sort_time);
+        tvSortChange.setOnClickListener(v -> {
+            sortByChange = true;
+            updateSortChips(tvSortChange, tvSortTime);
+        });
+        tvSortTime.setOnClickListener(v -> {
+            sortByChange = false;
+            updateSortChips(tvSortChange, tvSortTime);
+        });
+        updateSortChips(tvSortChange, tvSortTime);
+    }
+
+    private void updateSortChips(TextView tvSortChange, TextView tvSortTime) {
+        tvSortChange.setSelected(sortByChange);
+        tvSortTime.setSelected(!sortByChange);
+        // 重新排序当前列表
+        if (adapter.getCurrentList() != null) {
+            adapter.submitList(sortFunds(new ArrayList<>(adapter.getCurrentList())));
+        }
+    }
+
+    private List<FundEntity> sortFunds(List<FundEntity> list) {
+        if (sortByChange) {
+            list.sort(Comparator.comparing(FundEntity::getGszzl,
+                    Comparator.nullsLast(Comparator.reverseOrder())));
+        } else {
+            list.sort(Comparator.comparingInt(FundEntity::getOrderIndex));
+        }
+        return list;
+    }
+
+    private void refreshData() {
+        viewModel.refreshValuations();
+    }
+
+    private void startAutoRefresh() {
+        autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
+        autoRefreshHandler.postDelayed(autoRefreshRunnable, Constants.REFRESH_INTERVAL_MS);
     }
 
     private boolean hasFunds = false;
@@ -96,15 +148,18 @@ public class Home extends Fragment {
                 viewModel.refreshValuations();
             }
             hasFunds = !empty;
-            adapter.submitList(funds);
+            adapter.submitList(sortFunds(funds != null ? new ArrayList<>(funds) : new ArrayList<>()));
             emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
-            
-            updateSummary(funds);
+            updateStatusBar(funds);
         });
 
         viewModel.isRefreshing().observe(getViewLifecycleOwner(), refreshing -> {
             if (refreshing != null) {
                 swipeRefresh.setRefreshing(refreshing);
+                // 刷新结束(无论成败)后重启自动刷新计时
+                if (!refreshing) {
+                    startAutoRefresh();
+                }
             }
         });
 
@@ -116,20 +171,39 @@ public class Home extends Fragment {
         });
     }
 
-    private void updateSummary(java.util.List<com.fund.guguji.data.db.entity.FundEntity> funds) {
+    private void updateStatusBar(List<FundEntity> funds) {
         if (funds == null || funds.isEmpty()) {
-            tvTodayPL.setText("0.00");
-            tvTotalHoldings.setText("0.00");
-            tvTodayYield.setText("0.00%");
+            tvMarketStatus.setText("盘中 · 实时估值");
+            tvUpdateTime.setText("");
             return;
         }
+        tvMarketStatus.setText("盘中 · 实时估值");
+        // 展示最新一条的估值时间
+        String time = null;
+        for (FundEntity f : funds) {
+            if (f.getGztime() != null && !f.getGztime().isEmpty()) {
+                time = f.getGztime();
+                break;
+            }
+        }
+        tvUpdateTime.setText(time != null ? "更新于 " + time : "等待估值中…");
+    }
 
-        double totalPL = 0;
-        double totalHoldings = 0;
-        // Basic calculation for summary (needs more robust data from holding entities)
-        // For now, just showing placeholders or simple sum if available
-        tvTodayPL.setText(String.format(Locale.getDefault(), "+%.2f", totalPL));
-        tvTotalHoldings.setText(String.format(Locale.getDefault(), "%.2f", totalHoldings));
-        tvTodayYield.setText(String.format(Locale.getDefault(), "+%.2f%%", 0.0));
+    @Override
+    public void onResume() {
+        super.onResume();
+        startAutoRefresh();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        autoRefreshHandler.removeCallbacks(autoRefreshRunnable);
     }
 }

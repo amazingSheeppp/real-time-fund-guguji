@@ -2,13 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:paddingTop="40dp"
+    android:paddingBottom="40dp">
 
     <TextView
         android:id="@+id/tv_empty_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="serif"
         android:text="@string/empty_title"
+        android:textColor="@color/ink"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tv_empty_hint"
@@ -20,10 +24,10 @@
         android:id="@+id/tv_empty_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/empty_hint"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
         android:layout_marginTop="8dp"
+        android:text="@string/empty_hint"
+        android:textColor="@color/ink_faint"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_empty_title" />
