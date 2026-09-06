@@ -14,18 +14,21 @@
 | 功能 | 状态 | 说明 |
 |------|------|------|
 | 🔍 基金搜索 | ✅ | 按代码 / 名称 / 拼音首字母搜索，一键加入自选 |
-| 📋 自选基金列表 | ✅ | Room 本地持久化，长按删除 |
-| 📊 实时估值展示 | ✅ | 东方财富估值接口，30 秒自动刷新 + 下拉刷新 |
+| 📋 自选基金列表 | ✅ | Room 本地持久化，长按呼出底部水墨操作抽屉（设置分组 / 移出 / 删除自选） |
+| 📊 实时估值展示 | ✅ | 东方财富估值接口，30 秒自动轮询 + 下拉刷新，开盘与盘后状态自适应 |
 | 📈 涨跌幅展示 | ✅ | 涨 = 浓墨实心徽标，跌 = 淡墨空心徽标，停牌 = 虚线 |
-| 🔀 列表排序 | ✅ | 按涨跌幅 / 按添加时间切换 |
-| 🗂️ 基金分组 | ✅ | 数据层已实现（分组表 + 多对多关联） |
-| 🧹 数据管理 | ✅ | 清空自选数据 |
+| 🔀 列表排序 | ✅ | 按涨跌幅（降序）/ 按添加时间（降序）无缝切换 |
+| 🗂️ 基金分组管理 | ✅ | 顶部水墨滑动分组栏、新建/重命名/删除分组、基金多选归属、自定义分组空状态批量添加入组 |
+| 🖼️ 雅致水墨空状态 | ✅ | 纯矢量水墨徽记，首页自适应引导 + 搜索页双态切换（热门标签探索引导 / 无结果清空） |
+| 🧩 通用弹窗组件库 | ✅ | 封装 InkInputDialog、InkActionSheet、InkSelectSheet、ConfirmDialog，采用链式 Builder |
+| 📱 纯竖屏体验 | ✅ | 全应用强制锁定竖屏（Manifest 配置 + Application 生命周期全局双重保障） |
+| 🧹 数据管理 | ✅ | 一键清除全部数据（级联彻底清空自选基金、自定义分组及关联关系） |
 
 三个 Tab 结构：
 
-- **自选**——实时估值列表核心页
+- **自选**——实时估值列表核心页，含顶部水墨分组切换栏、自适应空状态、长按操作抽屉
 - **圈子**——二期占位页（邮箱登录 + 朋友持仓分组展示）
-- **我的**——清空数据、关于
+- **我的**——清空全部数据（自选+分组）、关于
 
 ### 二期（规划中）
 
@@ -42,6 +45,9 @@ App 模拟 Kindle 电子墨水屏观感，权威规范见 [design/DESIGN_SPEC.md
 - **像素硬朗**：1.5px 实线描边、小圆角、无阴影无渐变
 - **纸书气质**：标题衬线（思源宋体），数字等宽防抖动
 - **克制动效**：仅保留"刷新闪烁"动效，致敬 e-ink 全刷
+- **水墨弹窗体系**：
+  - 长按操作与多选归属采用**水墨底部抽屉面板**（`BottomSheetDialog`），带拖拽把手与水墨实心/空心勾选徽记
+  - 输入与确认采用**居中纸质卡片弹窗**，88% 屏幕黄金宽度与圆角细墨轮廓
 
 ## 技术栈
 
@@ -51,8 +57,8 @@ App 模拟 Kindle 电子墨水屏观感，权威规范见 [design/DESIGN_SPEC.md
 | 异步 | RxJava 3 + RxAndroid 3 |
 | 网络 | OkHttp（直连第三方公开接口） |
 | 解析 | Gson（JSON）+ Jsoup（HTML 表格） |
-| 数据库 | Room（`guguji_db`） |
-| UI | Material Design、RecyclerView、SwipeRefreshLayout、ConstraintLayout |
+| 数据库 | Room（`guguji_db`：`funds`、`fund_groups`、`group_fund_cross_ref`、`valuation_timeseries`） |
+| UI | Material Design、RecyclerView、SwipeRefreshLayout、ConstraintLayout、BottomSheetDialog |
 | 图表 | MPAndroidChart（已引入，图表 UI 待接入） |
 | 后台任务 | WorkManager（已引入，Worker 待实现） |
 | 构建 | Gradle 8.13 + AGP 8.12.3，Java 17 |
@@ -75,7 +81,7 @@ App 模拟 Kindle 电子墨水屏观感，权威规范见 [design/DESIGN_SPEC.md
 ```
 app/src/main/java/com/fund/guguji/
 ├── MainActivity.java              # 主页面（3 Tab 容器，Fragment show/hide 切换）
-├── RealTimeFundApp.java           # Application（数据库/仓库单例初始化）
+├── RealTimeFundApp.java           # Application（数据库/仓库单例初始化、全局竖屏控制）
 ├── data/
 │   ├── api/                       # 网络接口层
 │   │   ├── EastMoneyApi.java      #   东方财富：估值/净值/持仓/搜索
@@ -88,8 +94,14 @@ app/src/main/java/com/fund/guguji/
 │   ├── model/                     # 网络数据模型（非持久化）
 │   └── repository/                # FundRepository（远程+本地）/ LocalFundRepository（纯本地）
 ├── ui/
-│   ├── component/                 # BottomTabBar 等自定义控件
-│   ├── dialog/                    # ConfirmDialog 确认弹窗
+│   ├── component/                 # BottomTabBar、Empty 水墨空状态控件
+│   ├── dialog/                    # 通用水墨弹窗组件库
+│   │   ├── ConfirmDialog.java     #   水墨卡片二次确认弹窗（支持 Builder）
+│   │   ├── FundGroupDialogs.java  #   基金分组业务弹窗门面
+│   │   ├── InkActionSheet.java    #   水墨底部操作抽屉组件（BottomSheet）
+│   │   ├── InkDialogHelper.java   #   弹窗尺寸与键盘调度工具
+│   │   ├── InkInputDialog.java    #   水墨单行文本输入弹窗（Builder）
+│   │   └── InkSelectSheet.java    #   水墨泛型单选/多选抽屉（BottomSheet）
 │   ├── fragment/                  # Home（自选）/ Circle（圈子占位）/ Setting（我的）
 │   ├── main/                      # FundListAdapter / MainViewModel
 │   ├── search/                    # SearchActivity 搜索页
