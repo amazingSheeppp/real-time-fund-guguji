@@ -40,6 +40,58 @@
 
         </com.google.android.material.appbar.MaterialToolbar>
 
+        <!-- 顶部横向滚动分组栏 -->
+        <HorizontalScrollView
+            android:id="@+id/hsv_groups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="10dp"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:id="@+id/layout_groups"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- 动态填充分组 Tab 项，末尾包含添加分组按钮 -->
+                <LinearLayout
+                    android:id="@+id/btn_add_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_search_tag"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:contentDescription="@string/group_add"
+                        android:src="@drawable/ic_add_small"
+                        app:tint="@color/ink" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/group_add"
+                        android:textColor="@color/ink"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

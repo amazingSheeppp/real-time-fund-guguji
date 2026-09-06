@@ -63,16 +63,42 @@ public class LocalFundRepository {
         return groupDao.getAllGroups();
     }
 
+    public List<GroupEntity> getAllGroupsSync() {
+        return groupDao.getAllGroupsSync();
+    }
+
+    public LiveData<List<FundEntity>> getFundsByGroup(String groupId) {
+        return groupDao.getFundsByGroup(groupId);
+    }
+
     public void insertGroup(GroupEntity group) {
         groupDao.insertGroup(group);
     }
 
+    public void updateGroupName(String groupId, String name) {
+        groupDao.updateGroupName(groupId, name);
+    }
+
     public void deleteGroupById(String groupId) {
         groupDao.deleteGroupById(groupId);
+        groupDao.clearGroup(groupId);
+    }
+
+    public boolean isGroupNameExists(String name) {
+        return groupDao.countGroupByName(name) > 0;
     }
 
     public void addFundToGroup(String fundCode, String groupId) {
         groupDao.addFundToGroup(new GroupFundCrossRef(groupId, fundCode));
+    }
+
+    public void addFundsToGroup(List<String> fundCodes, String groupId) {
+        if (fundCodes == null || fundCodes.isEmpty()) return;
+        List<GroupFundCrossRef> refs = new java.util.ArrayList<>();
+        for (String code : fundCodes) {
+            refs.add(new GroupFundCrossRef(groupId, code));
+        }
+        groupDao.addFundsToGroup(refs);
     }
 
     public void removeFundFromGroup(String fundCode, String groupId) {
@@ -81,6 +107,21 @@ public class LocalFundRepository {
 
     public List<String> getFundCodesInGroup(String groupId) {
         return groupDao.getFundCodesInGroup(groupId);
+    }
+
+    public List<String> getGroupIdsByFundSync(String fundCode) {
+        return groupDao.getGroupIdsByFundSync(fundCode);
+    }
+
+    public void setFundGroups(String fundCode, List<String> groupIds) {
+        groupDao.removeFundFromAllGroups(fundCode);
+        if (groupIds != null && !groupIds.isEmpty()) {
+            List<GroupFundCrossRef> refs = new java.util.ArrayList<>();
+            for (String gId : groupIds) {
+                refs.add(new GroupFundCrossRef(gId, fundCode));
+            }
+            groupDao.addFundsToGroup(refs);
+        }
     }
 
     public void clearGroup(String groupId) {

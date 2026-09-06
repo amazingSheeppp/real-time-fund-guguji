@@ -33,7 +33,8 @@ public class Setting extends Fragment {
 
         view.findViewById(R.id.btn_clear_data).setOnClickListener(v ->
                 ConfirmDialog.show(requireActivity(), "清除所有数据",
-                        "将清空全部自选基金，此操作不可恢复，确定继续吗？",
+                        "将清空全部自选基金与自定义分组，此操作不可恢复，确定继续吗？",
+                        "清除",
                         this::clearAllData));
 
         view.findViewById(R.id.btn_about).setOnClickListener(v ->
@@ -42,11 +43,16 @@ public class Setting extends Fragment {
 
     private void clearAllData() {
         AppDatabase db = ((RealTimeFundApp) requireActivity().getApplication()).getDatabase();
-        Completable.fromAction(() -> db.fundDao().deleteAll())
+        Completable.fromAction(() -> {
+                    db.fundDao().deleteAll();
+                    db.groupDao().deleteAllGroups();
+                    db.groupDao().deleteAllCrossRefs();
+                    db.clearAllTables();
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        () -> Toast.makeText(getContext(), "已清除", Toast.LENGTH_SHORT).show(),
+                        () -> Toast.makeText(getContext(), "已清除所有数据", Toast.LENGTH_SHORT).show(),
                         throwable -> Toast.makeText(getContext(),
                                 "清除失败: " + throwable.getMessage(), Toast.LENGTH_SHORT).show()
                 );

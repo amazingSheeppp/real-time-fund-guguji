@@ -7,6 +7,9 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +23,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fund.guguji.R;
 import com.fund.guguji.data.db.entity.FundEntity;
-import com.fund.guguji.ui.dialog.ConfirmDialog;
+import com.fund.guguji.data.db.entity.GroupEntity;
+import com.fund.guguji.ui.dialog.FundGroupDialogs;
 import com.fund.guguji.ui.main.FundListAdapter;
 import com.fund.guguji.ui.main.MainViewModel;
 import com.fund.guguji.ui.search.SearchActivity;
@@ -40,6 +44,19 @@ public class Home extends Fragment {
 
     private TextView tvMarketStatus;
     private TextView tvUpdateTime;
+
+    // 分组栏视图
+    private LinearLayout layoutGroups;
+    private HorizontalScrollView hsvGroups;
+    private View btnAddGroup;
+
+    // 空状态动态文案与操作视图
+    private TextView tvEmptyTitle;
+    private TextView tvEmptyHint;
+    private TextView tvEmptyBtnText;
+    private ImageView ivEmptyBtnIcon;
+
+    private List<GroupEntity> latestGroups = new ArrayList<>();
 
     private final Handler autoRefreshHandler = new Handler(Looper.getMainLooper());
     private final Runnable autoRefreshRunnable = this::refreshData;
@@ -68,6 +85,16 @@ public class Home extends Fragment {
         tvMarketStatus = view.findViewById(R.id.tv_market_status);
         tvUpdateTime = view.findViewById(R.id.tv_update_time);
 
+        // 分组栏初始化
+        layoutGroups = view.findViewById(R.id.layout_groups);
+        hsvGroups = view.findViewById(R.id.hsv_groups);
+        btnAddGroup = view.findViewById(R.id.btn_add_group);
+        if (btnAddGroup != null) {
+            btnAddGroup.setOnClickListener(v ->
+                    FundGroupDialogs.showCreateGroupDialog(requireContext(), name ->
+                            viewModel.createGroup(name, group -> viewModel.setSelectedGroupId(group.getId()))));
+        }
+
         RecyclerView recyclerView = view.findViewById(R.id.recycler_funds);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -76,9 +103,36 @@ public class Home extends Fragment {
                     // 一期无详情页,点击暂无操作
                 },
                 fund -> {
-                    ConfirmDialog.show(requireActivity(), "删除基金",
-                            "确定删除 " + fund.getName() + " 吗？",
-                            () -> viewModel.deleteFund(fund));
+                    String currentGroupId = viewModel.getSelectedGroupId().getValue();
+                    boolean isSpecificGroup = currentGroupId != null && !MainViewModel.GROUP_ID_ALL.equals(currentGroupId);
+                    viewModel.getGroupIdsByFund(fund.getCode(), currentGroupIds -> {
+                        FundGroupDialogs.showFundActionDialog(requireContext(), fund, latestGroups, currentGroupIds, isSpecificGroup, new FundGroupDialogs.OnFundActionListener() {
+                            @Override
+                            public void onManageGroups() {
+                                FundGroupDialogs.showSelectGroupsDialog(requireContext(), fund, latestGroups, currentGroupIds,
+                                        selectedGroupIds -> {
+                                            viewModel.updateFundGroups(fund.getCode(), selectedGroupIds);
+                                            Toast.makeText(getContext(), "已更新所属分组", Toast.LENGTH_SHORT).show();
+                                        },
+                                        () -> FundGroupDialogs.showCreateGroupDialog(requireContext(),
+                                                name -> viewModel.createGroup(name, null))
+                                );
+                            }
+
+                            @Override
+                            public void onRemoveFromCurrentGroup() {
+                                if (isSpecificGroup) {
+                                    viewModel.removeFundFromGroup(fund.getCode(), currentGroupId);
+                                    Toast.makeText(getContext(), "已从当前分组移出", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onDeleteFund() {
+                                viewModel.deleteFund(fund);
+                            }
+                        });
+                    });
                 }
         );
         recyclerView.setAdapter(adapter);
@@ -87,12 +141,15 @@ public class Home extends Fragment {
         swipeRefresh.setOnRefreshListener(() -> viewModel.refreshValuations());
 
         emptyState = view.findViewById(R.id.empty_state);
+        tvEmptyTitle = emptyState.findViewById(R.id.tv_empty_title);
+        tvEmptyHint = emptyState.findViewById(R.id.tv_empty_hint);
+        tvEmptyBtnText = emptyState.findViewById(R.id.tv_empty_btn_text);
+        ivEmptyBtnIcon = emptyState.findViewById(R.id.iv_empty_btn_icon);
 
-        // 空状态“搜索添加”按钮点击跳转搜索页面
+        // 空状态操作按钮（根据当前分组自适应行为：全局时跳转搜索，自定义分组时支持勾选添加入组）
         View btnEmptyAdd = emptyState.findViewById(R.id.btn_empty_add);
         if (btnEmptyAdd != null) {
-            btnEmptyAdd.setOnClickListener(v ->
-                    startActivity(new Intent(getActivity(), SearchActivity.class)));
+            btnEmptyAdd.setOnClickListener(v -> onEmptyStateAction());
         }
 
         // 刷新按钮
@@ -118,6 +175,122 @@ public class Home extends Fragment {
             }
         });
         updateSortChips(tvSortChange, tvSortTime);
+    }
+
+    /**
+     * 空状态主操作按钮点击逻辑
+     */
+    private void onEmptyStateAction() {
+        String currentGroupId = viewModel.getSelectedGroupId().getValue();
+        if (currentGroupId == null || MainViewModel.GROUP_ID_ALL.equals(currentGroupId)) {
+            startActivity(new Intent(getActivity(), SearchActivity.class));
+        } else {
+            GroupEntity group = findGroupById(currentGroupId);
+            if (group == null) {
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+                return;
+            }
+            List<FundEntity> allFunds = viewModel.getAllFunds().getValue();
+            viewModel.getFundCodesInGroup(currentGroupId, existingCodes -> {
+                if (allFunds == null || allFunds.isEmpty()) {
+                    startActivity(new Intent(getActivity(), SearchActivity.class));
+                } else {
+                    FundGroupDialogs.showAddFundsToGroupDialog(requireContext(), group, allFunds, existingCodes,
+                            selectedCodes -> {
+                                viewModel.addFundsToGroup(selectedCodes, group.getId());
+                                Toast.makeText(getContext(), "已添加所选基金到分组", Toast.LENGTH_SHORT).show();
+                            });
+                }
+            });
+        }
+    }
+
+    private GroupEntity findGroupById(String groupId) {
+        if (latestGroups == null || groupId == null) return null;
+        for (GroupEntity g : latestGroups) {
+            if (groupId.equals(g.getId())) return g;
+        }
+        return null;
+    }
+
+    /**
+     * 动态渲染分组 Tab 栏
+     */
+    private void renderGroupTabs(List<GroupEntity> groups, String selectedId) {
+        if (layoutGroups == null) return;
+        View addBtn = layoutGroups.findViewById(R.id.btn_add_group);
+        layoutGroups.removeAllViews();
+
+        String finalSelectedId = selectedId != null ? selectedId : MainViewModel.GROUP_ID_ALL;
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        // 1. 添加“全部”
+        View allTabView = inflater.inflate(R.layout.item_group_tab, layoutGroups, false);
+        TextView tvAll = allTabView.findViewById(R.id.tv_group_name);
+        tvAll.setText(R.string.group_all);
+        boolean allSelected = MainViewModel.GROUP_ID_ALL.equals(finalSelectedId);
+        tvAll.setSelected(allSelected);
+        tvAll.setOnClickListener(v -> viewModel.setSelectedGroupId(MainViewModel.GROUP_ID_ALL));
+        layoutGroups.addView(allTabView);
+
+        // 2. 依次添加用户自定义分组
+        if (groups != null) {
+            for (GroupEntity group : groups) {
+                View tabView = inflater.inflate(R.layout.item_group_tab, layoutGroups, false);
+                TextView tv = tabView.findViewById(R.id.tv_group_name);
+                tv.setText(group.getName());
+                boolean isSelected = group.getId().equals(finalSelectedId);
+                tv.setSelected(isSelected);
+
+                tv.setOnClickListener(v -> viewModel.setSelectedGroupId(group.getId()));
+
+                tv.setOnLongClickListener(v -> {
+                    FundGroupDialogs.showGroupActionDialog(requireContext(), group, new FundGroupDialogs.OnGroupActionListener() {
+                        @Override
+                        public void onRename() {
+                            FundGroupDialogs.showRenameGroupDialog(requireContext(), group, newName ->
+                                    viewModel.renameGroup(group.getId(), newName));
+                        }
+
+                        @Override
+                        public void onDelete() {
+                            viewModel.deleteGroup(group.getId());
+                        }
+                    });
+                    return true;
+                });
+
+                layoutGroups.addView(tabView);
+            }
+        }
+
+        // 3. 末尾保留“+ 新建分组”按钮
+        if (addBtn != null) {
+            layoutGroups.addView(addBtn);
+        }
+    }
+
+    /**
+     * 根据当前分组动态更新空状态文案与按钮
+     */
+    private void updateEmptyStateUI(boolean empty, String selectedId) {
+        emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
+        if (!empty) return;
+
+        boolean isAll = selectedId == null || MainViewModel.GROUP_ID_ALL.equals(selectedId);
+        if (isAll) {
+            if (tvEmptyTitle != null) tvEmptyTitle.setText(R.string.empty_title);
+            if (tvEmptyHint != null) tvEmptyHint.setText(R.string.empty_hint);
+            if (tvEmptyBtnText != null) tvEmptyBtnText.setText(R.string.empty_btn_search);
+            if (ivEmptyBtnIcon != null) ivEmptyBtnIcon.setImageResource(R.drawable.ic_search);
+        } else {
+            GroupEntity group = findGroupById(selectedId);
+            String groupName = group != null ? group.getName() : "当前分组";
+            if (tvEmptyTitle != null) tvEmptyTitle.setText("「" + groupName + "」暂无基金");
+            if (tvEmptyHint != null) tvEmptyHint.setText(R.string.group_empty_hint);
+            if (tvEmptyBtnText != null) tvEmptyBtnText.setText(R.string.group_btn_add_fund);
+            if (ivEmptyBtnIcon != null) ivEmptyBtnIcon.setImageResource(R.drawable.ic_add_small);
+        }
     }
 
     private void updateSortChips(TextView tvSortChange, TextView tvSortTime) {
@@ -192,13 +365,40 @@ public class Home extends Fragment {
     }
 
     private void observeData() {
-        viewModel.getAllFunds().observe(getViewLifecycleOwner(), funds -> {
+        // 观察分组列表变动
+        viewModel.getAllGroups().observe(getViewLifecycleOwner(), groups -> {
+            latestGroups = groups != null ? groups : new ArrayList<>();
+            String currentSelectedId = viewModel.getSelectedGroupId().getValue();
+            if (currentSelectedId != null && !MainViewModel.GROUP_ID_ALL.equals(currentSelectedId)) {
+                boolean exists = false;
+                for (GroupEntity g : latestGroups) {
+                    if (g.getId().equals(currentSelectedId)) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    viewModel.setSelectedGroupId(MainViewModel.GROUP_ID_ALL);
+                }
+            }
+            renderGroupTabs(latestGroups, viewModel.getSelectedGroupId().getValue());
+        });
+
+        // 观察当前选中的分组切换
+        viewModel.getSelectedGroupId().observe(getViewLifecycleOwner(), selectedId -> {
+            renderGroupTabs(latestGroups, selectedId);
+            boolean empty = latestFunds == null || latestFunds.isEmpty();
+            updateEmptyStateUI(empty, selectedId);
+        });
+
+        // 观察当前分组下的基金数据流
+        viewModel.getDisplayFunds().observe(getViewLifecycleOwner(), funds -> {
             boolean empty = funds == null || funds.isEmpty();
             latestFunds = funds;
             checkAndFixOrderIndices(funds);
             List<FundEntity> sorted = sortFunds(funds != null ? new ArrayList<>(funds) : new ArrayList<>());
             adapter.submitList(sorted, () -> adapter.notifyDataSetChanged());
-            emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
+            updateEmptyStateUI(empty, viewModel.getSelectedGroupId().getValue());
             updateStatusBar(funds);
 
             // 有基金还缺估值(如新添加的)时自动补刷一次

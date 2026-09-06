@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 选中态：卡片浅白文字 -->
+    <item android:state_selected="true" android:color="@color/card" />
+    <!-- 未选中态：淡墨文字 -->
+    <item android:color="@color/ink_mid" />
+</selector>

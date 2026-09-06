@@ -1,6 +1,9 @@
 package com.fund.guguji;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 
 import com.fund.guguji.data.api.EastMoneyApi;
 import com.fund.guguji.data.api.FundSearchApi;
@@ -51,6 +54,32 @@ public class RealTimeFundApp extends Application {
                 database.fundDao(),
                 database.groupDao()
         );
+
+        // 全局强制锁定应用内所有 Activity 为竖屏
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {}
+
+            @Override
+            public void onActivityResumed(Activity activity) {}
+
+            @Override
+            public void onActivityPaused(Activity activity) {}
+
+            @Override
+            public void onActivityStopped(Activity activity) {}
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {}
+        });
     }
 
     public AppDatabase getDatabase() { return database; }

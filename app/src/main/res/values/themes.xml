@@ -25,4 +25,20 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item>
     </style>
+
+    <!-- 水墨纸质卡片 Dialog 主题 -->
+    <style name="Theme.Guguji.Dialog" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <!-- 水墨底部抽屉面板主题 -->
+    <style name="Theme.Guguji.BottomSheetDialog" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Guguji.BottomSheet</item>
+    </style>
+
+    <style name="Widget.Guguji.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>
