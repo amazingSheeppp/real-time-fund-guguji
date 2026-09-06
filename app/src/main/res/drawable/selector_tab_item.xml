@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Selected state (Active):焦墨 -->
-    <item android:color="@color/ink" android:state_selected="true" />
-    <!-- Default state (Inactive):清墨 -->
-    <item android:color="@color/ink_faint" />
-</selector>

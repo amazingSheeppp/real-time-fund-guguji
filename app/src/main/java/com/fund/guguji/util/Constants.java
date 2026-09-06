@@ -12,9 +12,12 @@ public class Constants {
 
     public static final Gson GSON = new GsonBuilder().create();
 
-    // 东方财富基金估值接口域名
+    // 东方财富基金估值接口域名(fundgz 已停服,仅作回退)
     public static final String EAST_MONEY_HOST = "fundgz.1234567.com.cn";
     public static final String EAST_MONEY_FUND_HOST = "fund.eastmoney.com";
+
+    // 新浪盘中估值接口域名(当前估值主源)
+    public static final String SINA_HQ_HOST = "hq.sinajs.cn";
 
     // 腾讯行情接口域名
     public static final String TENCENT_QUOTE_HOST = "qt.gtimg.cn";

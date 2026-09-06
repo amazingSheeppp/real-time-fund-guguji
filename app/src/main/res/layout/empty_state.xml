@@ -3,33 +3,84 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="40dp"
-    android:paddingBottom="40dp">
+    android:paddingStart="24dp"
+    android:paddingTop="56dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="56dp">
 
+    <!-- 水墨风图腾徽记 -->
+    <ImageView
+        android:id="@+id/iv_empty_totem"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:contentDescription="@string/empty_title"
+        android:src="@drawable/ic_empty_state_ink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 衬线大标题 -->
     <TextView
         android:id="@+id/tv_empty_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:fontFamily="serif"
         android:text="@string/empty_title"
         android:textColor="@color/ink"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tv_empty_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/iv_empty_totem" />
 
+    <!-- 意境副标题文案 -->
     <TextView
         android:id="@+id/tv_empty_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="@string/empty_hint"
         android:textColor="@color/ink_faint"
-        android:textSize="14sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_empty_title" />
+
+    <!-- 水墨胶囊引导按钮 -->
+    <LinearLayout
+        android:id="@+id/btn_empty_add"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/bg_btn_ink_pill"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_empty_hint">
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_search"
+            app:tint="@color/card" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/empty_btn_search"
+            android:textColor="@color/card"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

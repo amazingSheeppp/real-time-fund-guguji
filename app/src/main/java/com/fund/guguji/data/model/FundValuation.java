@@ -3,7 +3,8 @@ package com.fund.guguji.data.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * 基金实时估值数据 (对应 fundgz JSONP 接口)
+ * 基金实时估值数据
+ * 原对应 fundgz JSONP 接口,现主源为新浪 fu_ 盘中估值接口(字段一致)
  */
 public class FundValuation {
     @SerializedName("fundcode")
@@ -34,4 +35,12 @@ public class FundValuation {
     public String getGsz() { return gsz; }
     public String getGszzl() { return gszzl; }
     public String getGztime() { return gztime; }
+
+    public void setFundCode(String fundCode) { this.fundCode = fundCode; }
+    public void setName(String name) { this.name = name; }
+    public void setJzrq(String jzrq) { this.jzrq = jzrq; }
+    public void setDwjz(String dwjz) { this.dwjz = dwjz; }
+    public void setGsz(String gsz) { this.gsz = gsz; }
+    public void setGszzl(String gszzl) { this.gszzl = gszzl; }
+    public void setGztime(String gztime) { this.gztime = gztime; }
 }

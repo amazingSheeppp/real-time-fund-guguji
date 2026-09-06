@@ -27,11 +27,6 @@
             android:name=".ui.search.SearchActivity"
             android:exported="false"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-
-        <!-- 设置页面 -->
-        <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

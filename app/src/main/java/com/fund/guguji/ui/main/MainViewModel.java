@@ -32,6 +32,8 @@ public class MainViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Boolean> refreshing = new MutableLiveData<>(false);
     private final MutableLiveData<Event<String>> errorMessage = new MutableLiveData<>();
+    private final MutableLiveData<String> lastRefreshTime = new MutableLiveData<>();
+    private final java.text.SimpleDateFormat timeFormat = new java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault());
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -52,27 +54,48 @@ public class MainViewModel extends AndroidViewModel {
         return refreshing;
     }
 
+    public LiveData<String> getLastRefreshTime() {
+        return lastRefreshTime;
+    }
+
     public LiveData<Event<String>> getErrorMessage() {
         return errorMessage;
     }
 
+    private boolean pendingRefresh = false;
+
     /**
-     * 刷新所有基金估值
+     * 刷新所有基金估值(正在刷新时记录 pendingRefresh，刷新完成后自动补刷)
      */
     public void refreshValuations() {
+        if (Boolean.TRUE.equals(refreshing.getValue())) {
+            pendingRefresh = true;
+            return;
+        }
         refreshing.setValue(true);
         disposables.add(
                 fundRepository.refreshAllValuations()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                funds -> refreshing.setValue(false),
+                                funds -> {
+                                    lastRefreshTime.setValue(timeFormat.format(new java.util.Date()));
+                                    onRefreshFinished();
+                                },
                                 throwable -> {
-                                    refreshing.setValue(false);
+                                    onRefreshFinished();
                                     errorMessage.setValue(new Event<>("刷新失败: " + throwable.getMessage()));
                                 }
                         )
         );
+    }
+
+    private void onRefreshFinished() {
+        refreshing.setValue(false);
+        if (pendingRefresh) {
+            pendingRefresh = false;
+            refreshValuations();
+        }
     }
 
     /**
@@ -91,6 +114,20 @@ public class MainViewModel extends AndroidViewModel {
                         throwable -> errorMessage.setValue(new Event<>(
                                 "删除失败: " + throwable.getMessage()))
                 )
+        );
+    }
+
+    /**
+     * 异步更新基金实体（如修复 orderIndex）
+     */
+    public void updateFund(FundEntity fund) {
+        disposables.add(
+                Completable.fromAction(() -> localFundRepository.updateFund(fund))
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                () -> { /* LiveData 自动刷新 */ },
+                                throwable -> {}
+                        )
         );
     }
 

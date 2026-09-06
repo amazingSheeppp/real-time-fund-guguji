@@ -11,36 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/paper"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        app:liftOnScroll="false"
+        app:liftOnScrollColor="@color/paper">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/paper"
             app:title="@string/app_name"
             app:titleTextAppearance="@style/TextAppearance.Guguji.SerifTitle"
             app:titleTextColor="@color/ink"
             app:titleCentered="false">
 
             <ImageView
-                android:id="@+id/btn_search"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_search"
-                android:contentDescription="@string/search"
-                app:tint="@color/ink_mid"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <ImageView
                 android:id="@+id/btn_refresh"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="end"
-                android:layout_marginEnd="56dp"
+                android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_refresh"
                 android:contentDescription="@string/refresh"
                 app:tint="@color/ink_mid"
@@ -122,13 +112,13 @@
                         android:id="@+id/tv_sort_change"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_chip_selected"
+                        android:background="@drawable/selector_chip_bg"
                         android:paddingStart="16dp"
                         android:paddingTop="6dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="6dp"
                         android:text="按涨跌幅"
-                        android:textColor="@color/card"
+                        android:textColor="@color/selector_chip_text"
                         android:textSize="12sp" />
 
                     <TextView
@@ -136,13 +126,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_chip_unselected"
+                        android:background="@drawable/selector_chip_bg"
                         android:paddingStart="16dp"
                         android:paddingTop="6dp"
                         android:paddingEnd="16dp"
                         android:paddingBottom="6dp"
                         android:text="按添加时间"
-                        android:textColor="@color/ink_faint"
+                        android:textColor="@color/selector_chip_text"
                         android:textSize="12sp" />
                 </LinearLayout>
 

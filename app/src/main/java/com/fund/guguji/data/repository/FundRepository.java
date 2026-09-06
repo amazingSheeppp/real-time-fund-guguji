@@ -34,6 +34,8 @@ public class FundRepository {
     }
 
     public void addFund(FundEntity fund) {
+        Integer maxOrder = fundDao.getMaxOrderIndex();
+        fund.setOrderIndex(maxOrder == null ? 1 : maxOrder + 1);
         fundDao.insertFund(fund);
     }
 
@@ -59,8 +61,13 @@ public class FundRepository {
 
                     List<FundEntity> updated = new java.util.ArrayList<>();
                     for (FundEntity fund : funds) {
-                        FundEntity refreshed = refreshSingleValuation(fund).blockingFirst();
-                        updated.add(refreshed);
+                        try {
+                            FundEntity refreshed = refreshSingleValuation(fund).blockingFirst();
+                            updated.add(refreshed);
+                        } catch (Exception e) {
+                            // 单只基金异常兜底，避免阻断整批基金刷新
+                            updated.add(fund);
+                        }
                     }
                     return updated;
                 })
@@ -83,10 +90,20 @@ public class FundRepository {
                     fund.setGztime(valuation.getGztime());
                     fund.setDwjz(valuation.getDwjz());
                     fund.setJzrq(valuation.getJzrq());
-                    fund.setName(valuation.getName());
+                    // 若已有名称则保留，避免被远程简写或非标准名称覆盖
+                    if (fund.getName() == null || fund.getName().isEmpty()) {
+                        fund.setName(valuation.getName());
+                    }
+                    fund.setNoValuation(false);
 
                     fundDao.updateFund(fund);
 
+                    return Observable.just(fund);
+                })
+                .onErrorResumeNext(throwable -> {
+                    // 无实时估值或获取失败时标记 noValuation 并持久化
+                    fund.setNoValuation(true);
+                    fundDao.updateFund(fund);
                     return Observable.just(fund);
                 })
                 .subscribeOn(Schedulers.io());

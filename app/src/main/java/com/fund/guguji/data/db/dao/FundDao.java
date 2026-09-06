@@ -47,4 +47,7 @@ public interface FundDao {
 
     @Query("SELECT COUNT(*) FROM funds")
     LiveData<Integer> getFundCount();
+
+    @Query("SELECT MAX(orderIndex) FROM funds")
+    Integer getMaxOrderIndex();
 }

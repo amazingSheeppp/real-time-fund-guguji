@@ -2,10 +2,15 @@
 <resources>
     <string name="app_name">咕咕鸡</string>
     <string name="search_hint">输入基金代码、名称或拼音</string>
-    <string name="empty_title">还没有添加基金</string>
-    <string name="empty_hint">点击右下角按钮搜索添加基金</string>
+    <string name="empty_title">暂无自选基金</string>
+    <string name="empty_hint">添加心仪基金，随时追踪盘中实时估值</string>
+    <string name="empty_btn_search">搜索添加基金</string>
     <string name="search_empty_title">没有找到相关基金</string>
     <string name="search_empty_hint">请检查输入的内容，或换用拼音首字母重试</string>
+    <string name="search_initial_title">探索全市场基金</string>
+    <string name="search_initial_hint">输入基金代码、名称或拼音首字母进行搜索</string>
+    <string name="search_hot_title">热门搜索</string>
+    <string name="search_empty_clear">清空搜索词</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
     <string name="confirm">确定</string>
@@ -21,4 +26,6 @@
     <string name="tab_my">圈子</string>
     <string name="tab_circle">圈子</string>
     <string name="tab_setting">我的</string>
+    <string name="market_status_trading">盘中 · 实时估值</string>
+    <string name="market_status_closed">非交易时间</string>
 </resources>

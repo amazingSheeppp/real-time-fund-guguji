@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.fund.guguji.R;
 import com.fund.guguji.data.db.entity.FundEntity;
 
+import java.util.Objects;
+
 /**
  * 基金列表适配器
  */
@@ -28,9 +30,12 @@ public class FundListAdapter extends ListAdapter<FundEntity, FundViewHolder> {
 
             @Override
             public boolean areContentsTheSame(@NonNull FundEntity oldItem, @NonNull FundEntity newItem) {
-                return oldItem.getGsz() != null ? oldItem.getGsz().equals(newItem.getGsz()) : newItem.getGsz() == null
-                        && oldItem.getGszzl() != null ? oldItem.getGszzl().equals(newItem.getGszzl()) : newItem.getGszzl() == null
-                        && oldItem.getName() != null ? oldItem.getName().equals(newItem.getName()) : newItem.getName() == null;
+                // 逐字段比较,避免三元链因运算符优先级被解析成嵌套分支导致短路
+                return Objects.equals(oldItem.getGsz(), newItem.getGsz())
+                        && Objects.equals(oldItem.getGszzl(), newItem.getGszzl())
+                        && Objects.equals(oldItem.getName(), newItem.getName())
+                        && Objects.equals(oldItem.getGztime(), newItem.getGztime())
+                        && oldItem.isNoValuation() == newItem.isNoValuation();
             }
         });
         this.listener = listener;

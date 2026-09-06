@@ -39,6 +39,9 @@ public class LocalFundRepository {
     }
 
     public void insertFund(FundEntity fund) {
+        // 按添加时间排序需要递增的 orderIndex,取当前最大值 +1,删除基金后仍保持相对顺序
+        Integer maxOrder = fundDao.getMaxOrderIndex();
+        fund.setOrderIndex(maxOrder == null ? 1 : maxOrder + 1);
         fundDao.insertFund(fund);
     }
 

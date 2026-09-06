@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="88dp"
+    android:height="88dp"
+    android:viewportWidth="88"
+    android:viewportHeight="88">
+
+    <!-- 外圈水墨圆盘底托 -->
+    <path
+        android:fillColor="#15171717"
+        android:pathData="M44,44m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0" />
+
+    <!-- 细墨线装饰外环 -->
+    <path
+        android:strokeColor="@color/line_soft"
+        android:strokeWidth="1"
+        android:pathData="M44,44m-38,0a38,38 0,1 1,76 0a38,38 0,1 1,-76 0" />
+
+    <!-- 基金图表底座横线 (淡墨) -->
+    <path
+        android:strokeColor="@color/ink_faint"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M22,62 L66,62" />
+
+    <!-- 基金图表纵轴辅助线 (清墨微隐) -->
+    <path
+        android:strokeColor="@color/line_soft"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:pathData="M22,26 L22,62" />
+
+    <!-- 水墨折线趋势曲线 (焦墨主力线) -->
+    <path
+        android:strokeColor="@color/ink"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M26,54 L38,42 L48,48 L64,30" />
+
+    <!-- 趋势折线节点 1 (淡墨点) -->
+    <path
+        android:fillColor="@color/ink_mid"
+        android:pathData="M38,42m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0" />
+
+    <!-- 趋势折线节点 2 (淡墨点) -->
+    <path
+        android:fillColor="@color/ink_mid"
+        android:pathData="M48,48m-2.2,0a2.2,2.2 0,1 1,4.4 0a2.2,2.2 0,1 1,-4.4 0" />
+
+    <!-- 终点上扬箭头/光芒小方印 (焦墨) -->
+    <path
+        android:fillColor="@color/ink"
+        android:pathData="M60,26 L66,26 L66,32 Z" />
+
+    <!-- 飞鸟/灵动水墨小微记 (上方淡墨) -->
+    <path
+        android:strokeColor="@color/ink_mid"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:pathData="M30,30 C34,26 38,29 40,32 C42,29 46,26 50,30" />
+
+</vector>

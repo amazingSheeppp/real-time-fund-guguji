@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 排序 chip 文字:随 selected 状态切换颜色 -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- 选中:焦墨实心块上反白(纸色),对齐 DESIGN_SPEC 5.5 -->
-    <item android:color="@color/on_primary_container" android:state_selected="true" />
+    <!-- 选中:纸色(焦墨底上反白) -->
+    <item android:state_selected="true" android:color="@color/card" />
     <!-- 未选中:清墨 -->
     <item android:color="@color/ink_faint" />
 </selector>

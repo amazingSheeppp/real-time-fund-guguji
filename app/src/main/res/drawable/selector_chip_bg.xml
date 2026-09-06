@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 排序 chip 背景:随 selected 状态切换选中/未选中样式 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 选中:焦墨实心 -->
+    <item android:state_selected="true" android:drawable="@drawable/bg_chip_selected" />
+    <!-- 未选中:浅描边 -->
+    <item android:drawable="@drawable/bg_chip_unselected" />
+</selector>

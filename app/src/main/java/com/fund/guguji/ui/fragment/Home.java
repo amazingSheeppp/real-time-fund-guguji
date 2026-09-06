@@ -25,6 +25,7 @@ import com.fund.guguji.ui.main.FundListAdapter;
 import com.fund.guguji.ui.main.MainViewModel;
 import com.fund.guguji.ui.search.SearchActivity;
 import com.fund.guguji.util.Constants;
+import com.fund.guguji.util.MarketUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -87,12 +88,17 @@ public class Home extends Fragment {
 
         emptyState = view.findViewById(R.id.empty_state);
 
+        // 空状态“搜索添加”按钮点击跳转搜索页面
+        View btnEmptyAdd = emptyState.findViewById(R.id.btn_empty_add);
+        if (btnEmptyAdd != null) {
+            btnEmptyAdd.setOnClickListener(v ->
+                    startActivity(new Intent(getActivity(), SearchActivity.class)));
+        }
+
         // 刷新按钮
         view.findViewById(R.id.btn_refresh).setOnClickListener(v -> refreshData());
 
-        // 添加基金:顶部搜索按钮 与 右下角 FAB
-        view.findViewById(R.id.btn_search).setOnClickListener(v ->
-                startActivity(new Intent(getActivity(), SearchActivity.class)));
+        // 添加基金:右下角 FAB 进入搜索页
         view.findViewById(R.id.fab_add).setOnClickListener(v ->
                 startActivity(new Intent(getActivity(), SearchActivity.class)));
 
@@ -100,12 +106,16 @@ public class Home extends Fragment {
         TextView tvSortChange = view.findViewById(R.id.tv_sort_change);
         TextView tvSortTime = view.findViewById(R.id.tv_sort_time);
         tvSortChange.setOnClickListener(v -> {
-            sortByChange = true;
-            updateSortChips(tvSortChange, tvSortTime);
+            if (!sortByChange) {
+                sortByChange = true;
+                updateSortChips(tvSortChange, tvSortTime);
+            }
         });
         tvSortTime.setOnClickListener(v -> {
-            sortByChange = false;
-            updateSortChips(tvSortChange, tvSortTime);
+            if (sortByChange) {
+                sortByChange = false;
+                updateSortChips(tvSortChange, tvSortTime);
+            }
         });
         updateSortChips(tvSortChange, tvSortTime);
     }
@@ -113,18 +123,32 @@ public class Home extends Fragment {
     private void updateSortChips(TextView tvSortChange, TextView tvSortTime) {
         tvSortChange.setSelected(sortByChange);
         tvSortTime.setSelected(!sortByChange);
-        // 重新排序当前列表
-        if (adapter.getCurrentList() != null) {
-            adapter.submitList(sortFunds(new ArrayList<>(adapter.getCurrentList())));
+        // 重新排序当前列表并提交更新
+        List<FundEntity> source = latestFunds != null ? latestFunds : adapter.getCurrentList();
+        if (source != null && !source.isEmpty()) {
+            List<FundEntity> sorted = sortFunds(new ArrayList<>(source));
+            adapter.submitList(sorted, () -> {
+                // 确保视图精准重绘并置顶
+                adapter.notifyDataSetChanged();
+                RecyclerView rv = getView() != null ? getView().findViewById(R.id.recycler_funds) : null;
+                if (rv != null) {
+                    rv.scrollToPosition(0);
+                }
+            });
         }
     }
 
     private List<FundEntity> sortFunds(List<FundEntity> list) {
+        if (list == null) return new ArrayList<>();
         if (sortByChange) {
+            // 按涨跌幅：从大到小（降序），涨幅高的在前，无估值(null)的置后；相同涨跌幅按添加时间倒序
             list.sort(Comparator.comparing(FundEntity::getGszzl,
-                    Comparator.nullsLast(Comparator.reverseOrder())));
+                    Comparator.nullsLast(Comparator.reverseOrder()))
+                    .thenComparing(Comparator.comparingInt(FundEntity::getOrderIndex).reversed()));
         } else {
-            list.sort(Comparator.comparingInt(FundEntity::getOrderIndex));
+            // 按添加时间：从新到旧（降序），最新添加的在最前；相同添加时间按代码倒序
+            list.sort(Comparator.comparingInt(FundEntity::getOrderIndex).reversed()
+                    .thenComparing(Comparator.comparing(FundEntity::getCode, Comparator.reverseOrder())));
         }
         return list;
     }
@@ -139,25 +163,62 @@ public class Home extends Fragment {
     }
 
     private boolean hasFunds = false;
+    // 最近一次 LiveData 下发的基金列表,供刷新结束后复查是否仍有缺估值的基金
+    private List<FundEntity> latestFunds = null;
+    private boolean orderIndicesChecked = false;
+
+    /**
+     * 检查并为存量全部为 0 的 orderIndex 分配连续序号，确保添加时间排序生效
+     */
+    private void checkAndFixOrderIndices(List<FundEntity> funds) {
+        if (orderIndicesChecked || funds == null || funds.size() <= 1) {
+            return;
+        }
+        boolean allZero = true;
+        for (FundEntity f : funds) {
+            if (f.getOrderIndex() != 0) {
+                allZero = false;
+                break;
+            }
+        }
+        if (allZero) {
+            orderIndicesChecked = true;
+            for (int i = 0; i < funds.size(); i++) {
+                FundEntity fund = funds.get(i);
+                fund.setOrderIndex(i + 1);
+                viewModel.updateFund(fund);
+            }
+        }
+    }
 
     private void observeData() {
         viewModel.getAllFunds().observe(getViewLifecycleOwner(), funds -> {
             boolean empty = funds == null || funds.isEmpty();
-            if (!empty && !hasFunds) {
-                hasFunds = true;
+            latestFunds = funds;
+            checkAndFixOrderIndices(funds);
+            List<FundEntity> sorted = sortFunds(funds != null ? new ArrayList<>(funds) : new ArrayList<>());
+            adapter.submitList(sorted, () -> adapter.notifyDataSetChanged());
+            emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
+            updateStatusBar(funds);
+
+            // 有基金还缺估值(如新添加的)时自动补刷一次
+            if (!empty && hasPendingValuation(funds)) {
                 viewModel.refreshValuations();
             }
             hasFunds = !empty;
-            adapter.submitList(sortFunds(funds != null ? new ArrayList<>(funds) : new ArrayList<>()));
-            emptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
-            updateStatusBar(funds);
         });
 
         viewModel.isRefreshing().observe(getViewLifecycleOwner(), refreshing -> {
             if (refreshing != null) {
                 swipeRefresh.setRefreshing(refreshing);
-                // 刷新结束(无论成败)后重启自动刷新计时
                 if (!refreshing) {
+                    // 刷新结束后复查:若期间新添加了基金(估值仍缺),立即补刷
+                    if (latestFunds != null && !latestFunds.isEmpty()
+                            && hasPendingValuation(latestFunds)) {
+                        viewModel.refreshValuations();
+                        return;
+                    }
+                    // 刷新结束(无论成败)后重启自动刷新计时
                     startAutoRefresh();
                 }
             }
@@ -169,16 +230,43 @@ public class Home extends Fragment {
                 Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
+
+        // 监听最新刷新时间，刷新完成时即时更新状态条
+        viewModel.getLastRefreshTime().observe(getViewLifecycleOwner(), time -> {
+            if (latestFunds != null && !latestFunds.isEmpty() && time != null && !time.isEmpty()) {
+                tvUpdateTime.setText("更新于 " + time);
+            }
+        });
+    }
+
+    /**
+     * 判断列表中是否有基金还没拉到估值(新添加的基金 gsz 为空且未标记为无估值)
+     */
+    private boolean hasPendingValuation(List<FundEntity> funds) {
+        if (funds == null) return false;
+        for (FundEntity fund : funds) {
+            if (!fund.isNoValuation() && (fund.getGsz() == null || fund.getGsz().isEmpty())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void updateStatusBar(List<FundEntity> funds) {
+        boolean isTrading = MarketUtils.isTradingTime();
+        tvMarketStatus.setText(isTrading ? R.string.market_status_trading : R.string.market_status_closed);
+
         if (funds == null || funds.isEmpty()) {
-            tvMarketStatus.setText("盘中 · 实时估值");
             tvUpdateTime.setText("");
             return;
         }
-        tvMarketStatus.setText("盘中 · 实时估值");
-        // 展示最新一条的估值时间
+        // 优先展示最近一次刷新的完成时间
+        String refreshTime = viewModel.getLastRefreshTime().getValue();
+        if (refreshTime != null && !refreshTime.isEmpty()) {
+            tvUpdateTime.setText("更新于 " + refreshTime);
+            return;
+        }
+        // 未刷新过时回退展示最新一条基金的行情估值时间
         String time = null;
         for (FundEntity f : funds) {
             if (f.getGztime() != null && !f.getGztime().isEmpty()) {
@@ -192,6 +280,11 @@ public class Home extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateStatusBar(latestFunds);
+        // 恢复前台时若存在待估值基金，主动触发补刷
+        if (latestFunds != null && !latestFunds.isEmpty() && hasPendingValuation(latestFunds)) {
+            viewModel.refreshValuations();
+        }
         startAutoRefresh();
     }
 

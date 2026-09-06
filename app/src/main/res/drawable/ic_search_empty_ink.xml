@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="88dp"
+    android:height="88dp"
+    android:viewportWidth="88"
+    android:viewportHeight="88">
+
+    <!-- 外圈水墨圆盘底托 (清浅晕染) -->
+    <path
+        android:fillColor="#15171717"
+        android:pathData="M44,44m-40,0a40,40 0,1 1,80 0a40,40 0,1 1,-80 0" />
+
+    <!-- 细墨线装饰外环 -->
+    <path
+        android:strokeColor="@color/line_soft"
+        android:strokeWidth="1"
+        android:pathData="M44,44m-38,0a38,38 0,1 1,76 0a38,38 0,1 1,-76 0" />
+
+    <!-- 飞鸟/灵动水墨微记 (右上淡墨) -->
+    <path
+        android:strokeColor="@color/ink_mid"
+        android:strokeWidth="1.3"
+        android:strokeLineCap="round"
+        android:pathData="M52,22 C55,19 58,21 60,23 C62,21 65,19 68,22" />
+
+    <!-- 水墨放大镜镜框 (焦墨环形) -->
+    <path
+        android:strokeColor="@color/ink"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M39,39m-14,0a14,14 0,1 1,28 0a14,14 0,1 1,-28 0" />
+
+    <!-- 镜片内折线行情走势图 (淡墨探索) -->
+    <path
+        android:strokeColor="@color/ink_faint"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M30,44 L36,38 L41,41 L47,32" />
+
+    <!-- 折线节点 1 (中墨点) -->
+    <path
+        android:fillColor="@color/ink_mid"
+        android:pathData="M36,38m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+
+    <!-- 折线节点 2 (焦墨点) -->
+    <path
+        android:fillColor="@color/ink"
+        android:pathData="M47,32m-1.5,0a1.5,1.5 0,1 1,3 0a1.5,1.5 0,1 1,-3 0" />
+
+    <!-- 水墨放大镜手柄 (焦墨倾斜提斗) -->
+    <path
+        android:strokeColor="@color/ink"
+        android:strokeWidth="3.6"
+        android:strokeLineCap="round"
+        android:pathData="M49,49 L62,62" />
+
+    <!-- 手柄末端微墨笔锋 -->
+    <path
+        android:strokeColor="@color/ink_heavy"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:pathData="M59,59 L63,63" />
+
+</vector>
