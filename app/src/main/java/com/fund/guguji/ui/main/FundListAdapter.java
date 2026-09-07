@@ -35,6 +35,9 @@ public class FundListAdapter extends ListAdapter<FundEntity, FundViewHolder> {
                         && Objects.equals(oldItem.getGszzl(), newItem.getGszzl())
                         && Objects.equals(oldItem.getName(), newItem.getName())
                         && Objects.equals(oldItem.getGztime(), newItem.getGztime())
+                        && Objects.equals(oldItem.getOfficialNav(), newItem.getOfficialNav())
+                        && Objects.equals(oldItem.getOfficialNavDate(), newItem.getOfficialNavDate())
+                        && Objects.equals(oldItem.getOfficialNavChange(), newItem.getOfficialNavChange())
                         && oldItem.isNoValuation() == newItem.isNoValuation();
             }
         });

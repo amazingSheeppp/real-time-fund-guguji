@@ -41,4 +41,21 @@
     <style name="Widget.Guguji.BottomSheet" parent="Widget.Material3.BottomSheet">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <!-- 图表区间切换 chip:选中=焦墨实心,未选中=浅边清墨(对齐设计规范 5.4) -->
+    <style name="Widget.Guguji.Chip" parent="Widget.Material3.Chip.Filter">
+        <item name="chipBackgroundColor">@color/selector_chip_range_bg</item>
+        <item name="android:textColor">@color/selector_chip_range_text</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/selector_chip_range_stroke</item>
+        <item name="chipCornerRadius">6dp</item>
+        <item name="chipMinHeight">30dp</item>
+        <item name="chipEndPadding">10dp</item>
+        <item name="chipStartPadding">10dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="closeIconVisible">false</item>
+        <item name="checkedIconVisible">false</item>
+    </style>
+
+    <style name="Widget.Guguji.Chip.Range" parent="Widget.Guguji.Chip" />
 </resources>

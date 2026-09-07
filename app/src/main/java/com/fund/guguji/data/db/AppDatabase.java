@@ -2,9 +2,12 @@ package com.fund.guguji.data.db;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.fund.guguji.data.db.dao.FundDao;
 import com.fund.guguji.data.db.dao.GroupDao;
@@ -21,7 +24,7 @@ import com.fund.guguji.data.db.entity.ValuationPointEntity;
         GroupFundCrossRef.class,
         ValuationPointEntity.class
     },
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -32,6 +35,16 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
 
+    /** v1 → v2: funds 表新增官方净值三列(收盘后覆盖估值展示) */
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE funds ADD COLUMN officialNav TEXT");
+            database.execSQL("ALTER TABLE funds ADD COLUMN officialNavDate TEXT");
+            database.execSQL("ALTER TABLE funds ADD COLUMN officialNavChange REAL");
+        }
+    };
+
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -40,7 +53,9 @@ public abstract class AppDatabase extends RoomDatabase {
                         context.getApplicationContext(),
                         AppDatabase.class,
                         "guguji_db"
-                    ).build();
+                    )
+                    .addMigrations(MIGRATION_1_2)
+                    .build();
                 }
             }
         }

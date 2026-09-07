@@ -100,7 +100,12 @@ public class Home extends Fragment {
 
         adapter = new FundListAdapter(
                 fund -> {
-                    // 一期无详情页,点击暂无操作
+                    // 点击基金卡片进入详情页(前十持仓当日涨跌 + 业绩走势)
+                    android.content.Intent intent = new android.content.Intent(requireContext(),
+                            com.fund.guguji.ui.detail.FundDetailActivity.class);
+                    intent.putExtra(com.fund.guguji.ui.detail.FundDetailActivity.EXTRA_FUND_CODE, fund.getCode());
+                    intent.putExtra(com.fund.guguji.ui.detail.FundDetailActivity.EXTRA_FUND_NAME, fund.getName());
+                    startActivity(intent);
                 },
                 fund -> {
                     String currentGroupId = viewModel.getSelectedGroupId().getValue();
@@ -311,11 +316,16 @@ public class Home extends Fragment {
         }
     }
 
+    /** 排序用的有效涨跌幅:官方净值涨跌优先(收盘后已同步),否则估算涨跌 */
+    private Double effectiveChange(FundEntity fund) {
+        return fund.getOfficialNavChange() != null ? fund.getOfficialNavChange() : fund.getGszzl();
+    }
+
     private List<FundEntity> sortFunds(List<FundEntity> list) {
         if (list == null) return new ArrayList<>();
         if (sortByChange) {
-            // 按涨跌幅：从大到小（降序），涨幅高的在前，无估值(null)的置后；相同涨跌幅按添加时间倒序
-            list.sort(Comparator.comparing(FundEntity::getGszzl,
+            // 按涨跌幅排序:优先官方净值涨跌(收盘后),否则估算涨跌;无值(null)置后;相同涨跌幅按添加时间倒序
+            list.sort(Comparator.comparing(this::effectiveChange,
                     Comparator.nullsLast(Comparator.reverseOrder()))
                     .thenComparing(Comparator.comparingInt(FundEntity::getOrderIndex).reversed()));
         } else {

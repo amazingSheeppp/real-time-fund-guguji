@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/paper">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/paper"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/paper"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="@color/ink" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="14dp">
+
+            <!-- ══ 基金名称/代码(滚动内容顶部) ══ -->
+            <TextView
+                android:id="@+id/tv_fund_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:fontFamily="serif"
+                android:maxLines="2"
+                android:textColor="@color/ink"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="易方达蓝筹精选混合" />
+
+            <TextView
+                android:id="@+id/tv_fund_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/ink_faint"
+                android:textSize="12sp"
+                tools:text="005827" />
+
+            <!-- ══ 估值头部 ══ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_valuation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/ink"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        tools:text="1.8232" />
+
+                    <TextView
+                        android:id="@+id/tv_valuation_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="@color/ink_faint"
+                        android:textSize="12sp"
+                        tools:text="估算净值 · 估值 14:31" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_change_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFeatureSettings="tnum"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:background="@drawable/bg_badge_up"
+                    tools:text="↑ +1.23%" />
+            </LinearLayout>
+
+            <!-- ══ 业绩走势卡片 ══ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="业绩走势"
+                    android:textColor="@color/ink"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <!-- 区间切换 chips -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_range"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:chipSpacingHorizontal="6dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_7d"
+                        style="@style/Widget.Guguji.Chip.Range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="近7日" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_1m"
+                        style="@style/Widget.Guguji.Chip.Range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="true"
+                        android:checked="true"
+                        android:text="近1月" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_6m"
+                        style="@style/Widget.Guguji.Chip.Range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="近半年" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_1y"
+                        style="@style/Widget.Guguji.Chip.Range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="近1年" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- 图表主体 -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/line_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="220dp"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- 区间累计涨跌(叠加在图表右上) -->
+                    <TextView
+                        android:id="@+id/tv_range_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="4dp"
+                        android:fontFeatureSettings="tnum"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        tools:text="近1月 +2.35%" />
+
+                    <!-- 图表加载中 -->
+                    <TextView
+                        android:id="@+id/tv_chart_loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="加载中…"
+                        android:textColor="@color/ink_faint"
+                        android:textSize="13sp" />
+
+                    <!-- 图表加载失败 -->
+                    <LinearLayout
+                        android:id="@+id/layout_chart_error"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_chart_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/ink_faint"
+                            android:textSize="13sp"
+                            tools:text="加载失败" />
+
+                        <TextView
+                            android:id="@+id/btn_chart_retry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_btn_ink_outline"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="5dp"
+                            android:text="点击重试"
+                            android:textColor="@color/ink"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- ══ 前十大持仓卡片 ══ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="serif"
+                        android:text="前十大持仓"
+                        android:textColor="@color/ink"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_report_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/ink_faint"
+                        android:textSize="11sp"
+                        tools:text="报告期 2026-06-30" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_holdings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never" />
+
+                    <!-- 持仓加载中 -->
+                    <TextView
+                        android:id="@+id/tv_holdings_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingVertical="24dp"
+                        android:text="加载中…"
+                        android:textColor="@color/ink_faint"
+                        android:textSize="13sp" />
+
+                    <!-- 持仓加载失败 -->
+                    <LinearLayout
+                        android:id="@+id/layout_holdings_error"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="24dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_holdings_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/ink_faint"
+                            android:textSize="13sp"
+                            tools:text="加载失败" />
+
+                        <TextView
+                            android:id="@+id/btn_holdings_retry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_btn_ink_outline"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="5dp"
+                            android:text="点击重试"
+                            android:textColor="@color/ink"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

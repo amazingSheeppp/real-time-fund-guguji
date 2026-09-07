@@ -47,7 +47,8 @@ public class RealTimeFundApp extends Application {
 
         fundRepository = new FundRepository(
                 database.fundDao(),
-                eastMoneyApi
+                eastMoneyApi,
+                tencentQuoteApi
         );
 
         localFundRepository = new LocalFundRepository(

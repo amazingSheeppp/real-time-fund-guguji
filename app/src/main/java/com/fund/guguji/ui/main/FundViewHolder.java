@@ -32,6 +32,31 @@ public class FundViewHolder extends RecyclerView.ViewHolder {
         tvName.setText(fund.getName() != null ? fund.getName() : fund.getCode());
         tvCode.setText(fund.getCode());
 
+        // 收盘后官方净值已同步:展示官方数据;否则展示实时估值
+        Double officialChange = fund.getOfficialNavChange();
+        boolean hasOfficial = officialChange != null
+                && fund.getOfficialNav() != null
+                && fund.getOfficialNavDate() != null;
+
+        if (hasOfficial) {
+            tvValuationTime.setText("净值 " + fund.getOfficialNavDate());
+            tvValuation.setText(fund.getOfficialNav());
+
+            tvChangePercent.setText(String.format("%+.2f%%", officialChange));
+            tvChangePercent.setVisibility(View.VISIBLE);
+            if (officialChange > 0) {
+                tvChangePercent.setTextColor(itemView.getContext().getColor(R.color.card));
+                tvChangePercent.setBackgroundResource(R.drawable.bg_badge_up);
+            } else if (officialChange < 0) {
+                tvChangePercent.setTextColor(itemView.getContext().getColor(R.color.ink));
+                tvChangePercent.setBackgroundResource(R.drawable.bg_badge_down);
+            } else {
+                tvChangePercent.setTextColor(itemView.getContext().getColor(R.color.ink_faint));
+                tvChangePercent.setBackgroundResource(R.drawable.bg_badge_flat);
+            }
+            return;
+        }
+
         // 估值时间
         if (fund.getGztime() != null && !fund.getGztime().isEmpty()) {
             tvValuationTime.setText("估值 " + fund.getGztime());

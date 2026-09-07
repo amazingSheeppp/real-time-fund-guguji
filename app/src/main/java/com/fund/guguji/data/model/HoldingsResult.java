@@ -23,6 +23,7 @@ public class HoldingsResult {
         private double percent;      // 持仓占比
         private double marketValue;  // 持仓市值(万元)
         private double shares;       // 持股数(万股)
+        private Double changePercent; // 当日涨跌幅%(null=无行情,如港股通外标的未匹配到市场)
 
         public String getCode() { return code; }
         public void setCode(String code) { this.code = code; }
@@ -34,5 +35,7 @@ public class HoldingsResult {
         public void setMarketValue(double marketValue) { this.marketValue = marketValue; }
         public double getShares() { return shares; }
         public void setShares(double shares) { this.shares = shares; }
+        public Double getChangePercent() { return changePercent; }
+        public void setChangePercent(Double changePercent) { this.changePercent = changePercent; }
     }
 }

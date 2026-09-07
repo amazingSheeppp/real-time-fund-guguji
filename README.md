@@ -15,9 +15,13 @@
 |------|------|------|
 | 🔍 基金搜索 | ✅ | 按代码 / 名称 / 拼音首字母搜索，一键加入自选 |
 | 📋 自选基金列表 | ✅ | Room 本地持久化，长按呼出底部水墨操作抽屉（设置分组 / 移出 / 删除自选） |
-| 📊 实时估值展示 | ✅ | 东方财富估值接口，30 秒自动轮询 + 下拉刷新，开盘与盘后状态自适应 |
+| 📊 实时估值展示 | ✅ | 新浪盘中估值主源（东财 JSONP 回退），30 秒自动轮询 + 下拉刷新，开盘与盘后状态自适应 |
+| 🏦 官方净值覆盖 | ✅ | 收盘后自动同步基金公司官方净值与日涨幅，列表/详情切换为"净值 日期"展示（QDII 等公布晚的基金延后覆盖） |
 | 📈 涨跌幅展示 | ✅ | 涨 = 浓墨实心徽标，跌 = 淡墨空心徽标，停牌 = 虚线 |
-| 🔀 列表排序 | ✅ | 按涨跌幅（降序）/ 按添加时间（降序）无缝切换 |
+| 📄 基金详情页 | ✅ | 点击卡片进入：估值头部 + 业绩走势 + 前十大持仓 |
+| 📈 业绩走势曲线 | ✅ | 近7日 / 近1月 / 近半年 / 近1年四档切换（MPAndroidChart，单位净值口径），区间累计涨跌、支持拖动缩放 |
+| 🏆 前十大持仓当日涨跌 | ✅ | 东财 F10 持仓 + 腾讯行情批量合并，沪深/港股代码自动匹配市场前缀，墨阶徽标展示 |
+| 🔀 列表排序 | ✅ | 按涨跌幅（降序，收盘后优先官方涨幅）/ 按添加时间（降序）无缝切换 |
 | 🗂️ 基金分组管理 | ✅ | 顶部水墨滑动分组栏、新建/重命名/删除分组、基金多选归属、自定义分组空状态批量添加入组 |
 | 🖼️ 雅致水墨空状态 | ✅ | 纯矢量水墨徽记，首页自适应引导 + 搜索页双态切换（热门标签探索引导 / 无结果清空） |
 | 🧩 通用弹窗组件库 | ✅ | 封装 InkInputDialog、InkActionSheet、InkSelectSheet、ConfirmDialog，采用链式 Builder |
@@ -57,9 +61,9 @@ App 模拟 Kindle 电子墨水屏观感，权威规范见 [design/DESIGN_SPEC.md
 | 异步 | RxJava 3 + RxAndroid 3 |
 | 网络 | OkHttp（直连第三方公开接口） |
 | 解析 | Gson（JSON）+ Jsoup（HTML 表格） |
-| 数据库 | Room（`guguji_db`：`funds`、`fund_groups`、`group_fund_cross_ref`、`valuation_timeseries`） |
+| 数据库 | Room（`guguji_db`：`funds`、`fund_groups`、`group_fund_cross_ref`、`valuation_timeseries`，v2） |
 | UI | Material Design、RecyclerView、SwipeRefreshLayout、ConstraintLayout、BottomSheetDialog |
-| 图表 | MPAndroidChart（已引入，图表 UI 待接入） |
+| 图表 | MPAndroidChart 3.1.0（详情页业绩走势） |
 | 后台任务 | WorkManager（已引入，Worker 待实现） |
 | 构建 | Gradle 8.13 + AGP 8.12.3，Java 17 |
 
@@ -69,10 +73,12 @@ App 模拟 Kindle 电子墨水屏观感，权威规范见 [design/DESIGN_SPEC.md
 
 | 数据 | 来源 |
 |------|------|
-| 实时估值（估算净值/涨跌幅） | 东方财富 `fundgz.1234567.com.cn`（JSONP） |
+| 实时估值（估算净值/涨跌幅） | 新浪 `hq.sinajs.cn/list=fu_*`（主源）；东方财富 `fundgz.1234567.com.cn`（JSONP，回退） |
+| 官方净值（收盘后覆盖展示） | 东方财富 `api.fund.eastmoney.com/f10/lsjz`（JSON，需 Referer） |
 | 基金搜索 | 东方财富 `fundsuggest.eastmoney.com` |
-| 历史净值 / 持仓股票 | 东方财富 `fund.eastmoney.com`（HTML 解析） |
-| 股票实时行情 | 腾讯 `qt.gtimg.cn` |
+| 全量历史净值（业绩走势） | 东方财富 `fund.eastmoney.com/pingzhongdata/{code}.js`（单文件全量净值点） |
+| 前十大持仓 | 东方财富 `fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc`（数据端点，页面 HTML 已异步化） |
+| 股票实时行情 | 腾讯 `qt.gtimg.cn`（GBK 编码，涨跌幅在 `~` 分隔字段索引 32） |
 
 接口字段与返回格式的完整说明见 [API_DOCUMENTATION.md](API_DOCUMENTATION.md)。
 
@@ -95,6 +101,9 @@ app/src/main/java/com/fund/guguji/
 │   └── repository/                # FundRepository（远程+本地）/ LocalFundRepository（纯本地）
 ├── ui/
 │   ├── component/                 # BottomTabBar、Empty 水墨空状态控件
+│   ├── detail/                    # FundDetailActivity 基金详情页
+│   │   ├── FundDetailViewModel.java  # 业绩走势/持仓数据流 + 会话级缓存
+│   │   └── HoldingsAdapter.java      # 前十大持仓列表（含当日涨跌徽标）
 │   ├── dialog/                    # 通用水墨弹窗组件库
 │   │   ├── ConfirmDialog.java     #   水墨卡片二次确认弹窗（支持 Builder）
 │   │   ├── FundGroupDialogs.java  #   基金分组业务弹窗门面
@@ -106,7 +115,7 @@ app/src/main/java/com/fund/guguji/
 │   ├── main/                      # FundListAdapter / MainViewModel
 │   ├── search/                    # SearchActivity 搜索页
 │   └── settings/                  # SettingsActivity 设置页
-└── util/                          # Constants / Event / NetworkUtils
+└── util/                          # Constants / Event / MarketUtils / NetworkUtils
 
 design/                            # 设计规范与 HTML 效果图（当前定稿：home_eink.html）
 ```
@@ -149,4 +158,4 @@ APK 输出路径：`app/build/outputs/apk/debug/app-debug.apk`
 
 ## 免责声明
 
-估值数据来自东方财富等公开接口，仅供参考，不构成任何投资建议。本项目为个人学习用途的基金追踪工具，数据准确性以基金公司官方披露为准。
+估值数据来自东方财富、新浪财经等公开接口，仅供参考，不构成任何投资建议。本项目为个人学习用途的基金追踪工具，数据准确性以基金公司官方披露为准。

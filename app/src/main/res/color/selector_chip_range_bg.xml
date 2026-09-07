@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 图表区间 chip 背景:选中=焦墨实心,未选中=透明(设计规范 5.4) -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/ink" />
+    <item android:color="@android:color/transparent" />
+</selector>

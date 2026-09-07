@@ -21,6 +21,9 @@ public class FundEntity {
     private Double gszzl;               // 估算涨跌幅百分比
     private Double zzl;                 // 真实涨跌幅百分比（来自历史净值）
     private boolean noValuation;        // true 表示无实时估值
+    private String officialNav;         // 官方单位净值(收盘后从 lsjz 接口同步)
+    private String officialNavDate;     // 官方净值日期 YYYY-MM-DD
+    private Double officialNavChange;   // 官方日涨跌幅%(非空=收盘后官方已覆盖估值展示)
     private String holdingsJson;        // 前10重仓持仓 JSON 序列化
     private String holdingsReportDate;  // 持仓报告日期
     private boolean holdingsIsLastQuarter; // 是否为最近一个季度末
@@ -60,6 +63,15 @@ public class FundEntity {
 
     public boolean isNoValuation() { return noValuation; }
     public void setNoValuation(boolean noValuation) { this.noValuation = noValuation; }
+
+    public String getOfficialNav() { return officialNav; }
+    public void setOfficialNav(String officialNav) { this.officialNav = officialNav; }
+
+    public String getOfficialNavDate() { return officialNavDate; }
+    public void setOfficialNavDate(String officialNavDate) { this.officialNavDate = officialNavDate; }
+
+    public Double getOfficialNavChange() { return officialNavChange; }
+    public void setOfficialNavChange(Double officialNavChange) { this.officialNavChange = officialNavChange; }
 
     public String getHoldingsJson() { return holdingsJson; }
     public void setHoldingsJson(String holdingsJson) { this.holdingsJson = holdingsJson; }

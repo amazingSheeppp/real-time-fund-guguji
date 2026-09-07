@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="9dp">
+
+    <!-- 排名 -->
+    <TextView
+        android:id="@+id/tv_rank"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:fontFeatureSettings="tnum"
+        android:textColor="@color/ink_faint"
+        android:textSize="12sp"
+        tools:text="1" />
+
+    <!-- 名称 + 代码/占比 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_stock_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/ink_heavy"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="贵州茅台" />
+
+        <TextView
+            android:id="@+id/tv_stock_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:fontFeatureSettings="tnum"
+            android:textColor="@color/ink_faint"
+            android:textSize="11sp"
+            tools:text="600519 · 占比 9.82%" />
+    </LinearLayout>
+
+    <!-- 当日涨跌徽标 -->
+    <TextView
+        android:id="@+id/tv_stock_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFeatureSettings="tnum"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        tools:background="@drawable/bg_badge_up"
+        tools:text="↑ +2.10%" />
+
+</LinearLayout>

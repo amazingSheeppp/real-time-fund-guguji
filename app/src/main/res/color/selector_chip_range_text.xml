@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 图表区间 chip 文字:选中=纸色(焦墨底反白),未选中=清墨 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/card" />
+    <item android:color="@color/ink_faint" />
+</selector>
