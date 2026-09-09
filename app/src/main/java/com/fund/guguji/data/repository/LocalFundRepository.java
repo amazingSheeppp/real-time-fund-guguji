@@ -30,6 +30,10 @@ public class LocalFundRepository {
         return fundDao.getAllFunds();
     }
 
+    public List<FundEntity> getAllFundsSync() {
+        return fundDao.getAllFundsSync();
+    }
+
     public LiveData<FundEntity> getFundByCodeLive(String code) {
         return fundDao.getFundByCodeLive(code);
     }

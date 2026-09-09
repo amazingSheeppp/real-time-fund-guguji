@@ -22,7 +22,9 @@ public class Constants {
     // 腾讯行情接口域名
     public static final String TENCENT_QUOTE_HOST = "qt.gtimg.cn";
 
-    // 网络请求超时
+    // 自建后端接口服务(GugujiServer),FastAPI 挂载在 /api/v1 前缀下
+    // 开发环境默认指向本机后端;真机联调时改为局域网/服务器地址
+    public static final String SERVER_BASE_URL = "http://10.0.2.2:8000/api/v1";
     public static final int CONNECT_TIMEOUT = 15;
     public static final int READ_TIMEOUT = 15;
 

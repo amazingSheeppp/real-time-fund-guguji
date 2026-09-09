@@ -42,4 +42,55 @@
     <string name="group_select_funds_title">选择基金加入分组</string>
     <string name="group_name_empty">分组名称不能为空</string>
     <string name="group_name_duplicate">已存在同名分组</string>
+
+    <!-- 登录页 -->
+    <string name="login_title">邮箱登录</string>
+    <string name="login_subtitle">咕咕鸡圈子 · 与朋友互看持仓</string>
+    <string name="login_email_hint">请输入邮箱地址</string>
+    <string name="login_code_hint">6 位验证码</string>
+    <string name="login_password_hint">设置/输入密码(选填, 6-32 位)</string>
+    <string name="login_send_code">获取验证码</string>
+    <string name="login_resend_code">重新发送(%d秒)</string>
+    <string name="login_submit">登录 / 注册</string>
+    <string name="login_tip">未注册邮箱验证后将自动创建账号</string>
+    <string name="login_email_invalid">请输入正确的邮箱地址</string>
+    <string name="login_code_invalid">请输入 6 位数字验证码</string>
+    <string name="login_code_sent">验证码已发送，请查收邮件</string>
+    <string name="login_password_short">密码长度至少 6 位</string>
+    <string name="login_sending">发送中…</string>
+
+    <!-- 圈子 Tab -->
+    <string name="circle_not_login_title">登录开启圈子</string>
+    <string name="circle_not_login_hint">邮箱登录后，可与朋友互看真实持仓</string>
+    <string name="circle_btn_login">邮箱登录</string>
+    <string name="circle_create">创建圈子</string>
+    <string name="circle_join">搜索加入</string>
+    <string name="circle_logout">退出登录</string>
+    <string name="circle_my_list_empty">还没有加入任何圈子</string>
+    <string name="circle_my_list_empty_hint">创建自己的圈子，或用圈子码加入朋友的圈子</string>
+    <string name="circle_role_owner">圈主</string>
+    <string name="circle_role_member">成员</string>
+    <string name="circle_pending">%d 条待审批</string>
+    <string name="circle_member_count">%d 名成员</string>
+    <string name="circle_create_title">创建圈子</string>
+    <string name="circle_name_hint">给圈子起个名字，如：老友记</string>
+    <string name="circle_desc_hint">圈子简介(选填, 最多 200 字)</string>
+    <string name="circle_name_empty">圈子名称不能为空</string>
+    <string name="circle_join_title">搜索圈子码</string>
+    <string name="circle_join_hint">输入朋友的圈子码</string>
+    <string name="circle_join_apply">申请加入</string>
+    <string name="circle_join_code_empty">请输入圈子码</string>
+    <string name="circle_created">圈子已创建，圈子码：%s</string>
+
+    <!-- 圈子详情 -->
+    <string name="circle_detail_friends">朋友持仓</string>
+    <string name="circle_detail_no_friends">圈子暂无其他成员</string>
+    <string name="circle_detail_friend_empty">该朋友还未同步持仓</string>
+    <string name="circle_detail_owner_badge">圈主</string>
+    <string name="circle_detail_leave">退出圈子</string>
+    <string name="circle_detail_dissolve">解散圈子</string>
+    <string name="circle_detail_manage_members">成员管理</string>
+    <string name="circle_detail_audit">审批申请</string>
+    <string name="circle_detail_approve">通过</string>
+    <string name="circle_detail_reject">拒绝</string>
 </resources>

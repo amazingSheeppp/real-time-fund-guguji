@@ -5,8 +5,10 @@ import android.app.Application;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
+import com.fund.guguji.data.api.AuthSession;
 import com.fund.guguji.data.api.EastMoneyApi;
 import com.fund.guguji.data.api.FundSearchApi;
+import com.fund.guguji.data.api.GugujiApi;
 import com.fund.guguji.data.api.TencentQuoteApi;
 import com.fund.guguji.data.db.AppDatabase;
 import com.fund.guguji.data.repository.FundRepository;
@@ -30,6 +32,9 @@ public class RealTimeFundApp extends Application {
     private FundRepository fundRepository;
     private LocalFundRepository localFundRepository;
 
+    private AuthSession authSession;
+    private GugujiApi gugujiApi;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -44,6 +49,9 @@ public class RealTimeFundApp extends Application {
         eastMoneyApi = new EastMoneyApi(httpClient);
         tencentQuoteApi = new TencentQuoteApi(httpClient);
         fundSearchApi = new FundSearchApi(httpClient, Constants.GSON);
+
+        authSession = AuthSession.newInstance(this);
+        gugujiApi = new GugujiApi(httpClient, authSession);
 
         fundRepository = new FundRepository(
                 database.fundDao(),
@@ -90,4 +98,6 @@ public class RealTimeFundApp extends Application {
     public FundSearchApi getFundSearchApi() { return fundSearchApi; }
     public FundRepository getFundRepository() { return fundRepository; }
     public LocalFundRepository getLocalFundRepository() { return localFundRepository; }
+    public AuthSession getAuthSession() { return authSession; }
+    public GugujiApi getGugujiApi() { return gugujiApi; }
 }
